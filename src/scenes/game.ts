@@ -131,15 +131,18 @@ export default class Game extends Phaser.Scene {
             this.spaceship.flipX = false;
         } else if (this.cursors.up.isDown){
             this.spaceship.setVelocityY(-this.speed)
-            if (this.spaceship.y < 100) this.spaceship.setY(100);
+            if (this.spaceship.y < 5500 ) this.spaceship.setY(5500);
             this.spaceship.flipY = false;
+            console.log(this.spaceship.y)
         } else if (this.cursors.down.isDown){
             this.spaceship.setVelocityY(this.speed)
-            if (this.spaceship.y < 800 ) this.spaceship.setY(800);
-            this.spaceship.flipY = false;
+            if (this.spaceship.y > 6430) this.spaceship.setY(6430);
+            this.spaceship.flipY = true;
+            console.log(this.spaceship.y)
         }
         else{
             this.spaceship.setVelocityX(0);
+            this.spaceship.setVelocityY(0)
         }
 
         const shiftJustPressed = Phaser.Input.Keyboard.JustDown(this.cursors.shift);   // this is to make sure it only happens once per key press
