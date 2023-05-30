@@ -115,9 +115,12 @@ export default class Game extends Phaser.Scene {
         if (!this.spaceship?.active)   // This checks if the spaceship has been created yet
             return;
         
-        // move camera up
         //this.cameras.main  //look here at how to adjust the camera view 
-
+        //moves camera until it reaches the very top.
+        if(this.cameras.main.scrollY >= 0){
+            this.cameras.main.scrollY = this.cameras.main.scrollY + this.scrollSpeed;
+            console.log(this.cameras.main.scrollY);
+        }
 
         // handle keyboard input
         if (this.cursors.left.isDown){
