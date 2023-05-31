@@ -112,7 +112,7 @@ export default class Game extends Phaser.Scene {
                     speedup.setBounce(1);
                     speedup.setData('type', 'speedup');
                     break;
-
+                /*
                 case 'enemy':
                     const enemy = this.matter.add.sprite(x,y,'space','Enemies/enemyRed2.png',{
                         isSensor:true
@@ -120,6 +120,7 @@ export default class Game extends Phaser.Scene {
                     enemy.setData('type','enemy');
                     this.createEnemyAnimations();
                     break;
+                */
             }
         });
 
@@ -215,8 +216,8 @@ export default class Game extends Phaser.Scene {
         }
 
         //create enemies on a random number check
-        if(Math.random()*1000 >998 ){
-                this.createEnemy(Math.random()*1500+50,this.cameras.main.scrollY +90);
+        if(Math.random()*100 >99.4 ){
+                this.createEnemy(Math.random()*1500,this.cameras.main.scrollY +90);
         }
 
         //TODO: Add ability to hold down shift to attack continuously with a delay between shots
@@ -262,40 +263,20 @@ export default class Game extends Phaser.Scene {
     }
 
     createEnemy(x:number,y:number){
-        var enemy = this.matter.add.sprite(x,y,'space','Enemies/enemyRed2.png',{
+        var chance = '';
+        var result = Math.floor(Math.random()*3+1);
+        console.log('Spawned ',result);
+        if(result == 3)
+            chance = 'Enemies/enemyRed3.png';
+        else if (result == 2)
+            chance = 'Enemies/enemyRed2.png';
+        else
+            chance = 'Enemies/enemyRed1.png';
+        var enemy = this.matter.add.sprite(x,y,'space',chance,{
             isSensor:true
         });
         enemy.setData('type','enemy');
-        /*
-        enemy.setOnCollide((data: MatterJS.ICollisionPair) => {
-
-            const spriteA = (data.bodyA as MatterJS.BodyType).gameObject as Phaser.Physics.Matter.Sprite
-            const spriteB = (data.bodyB as MatterJS.BodyType).gameObject as Phaser.Physics.Matter.Sprite
-            var health = 1;
-            console.log('i made it',health);
-            if (!spriteA?.getData || !spriteB?.getData)
-                return;
-            
-
-            
-            if (spriteA?.getData('type') == 'laser') {
-                console.log('enemy took damage');
-                health--;
-            }
-            if (spriteB?.getData('type') == 'laser') {
-                console.log('enemy took damage');
-                health--;
-            }
-            if(health<=0){
-                console.log('enemy died');
-                spriteA.destroy();
-                spriteB.destroy();
-                this.explosionSound.play();
-                events.emit('enemy-explode');
-            }
-            console.log('i made it',health);
-        });
-        */
+        //got rid of collision
     }
 
     private createSpaceshipAnimations(){
