@@ -1,5 +1,7 @@
 import Phaser from "phaser";
 import { sharedInstance as events } from "../helpers/eventCenter";
+//import { sharedInstance as events } from "../helpers/eventCenter";
+
 
 export default class UI extends Phaser.Scene {
 
@@ -7,6 +9,7 @@ export default class UI extends Phaser.Scene {
     private powerupsCollected: number = 0;
     private scoreLabel!: Phaser.GameObjects.Text;
     private scoreCollected: number = 0;
+    private timeLabel!: Phaser.GameObjects.Text;
 
     constructor() {
         super('ui');
@@ -21,8 +24,11 @@ export default class UI extends Phaser.Scene {
 
     create(){
         // add a text label to the screen
-        
-        this.powerupsLabel = this.add.text(10, 10, 'PowerUps: 0', {
+        const { width, height } = this.scale
+        this.add.rectangle(800,0,1600, 150,0x81B29A)
+        this.add.rectangle(800,0,1600, 142,0x3D405B)
+
+        this.powerupsLabel = this.add.text(1000, 18, 'PowerUps: 0', {
             fontSize: '32px', color: 'yellow'
         });
         
@@ -32,13 +38,23 @@ export default class UI extends Phaser.Scene {
             this.powerupsCollected++;
             this.powerupsLabel.text = 'PowerUps: '+this.powerupsCollected;
         })
-        this.scoreLabel = this.add.text(50, 50, 'Score: 0', {
+        this.scoreLabel = this.add.text(20, 18, 'Score: 0', {
             fontSize: '32px', color: 'yellow'
         });
         events.on('scoreCollected', () => {
             this.scoreCollected++;
-            this.scoreLabel.text = 'Score: '+this.powerupsCollected;
+            this.scoreLabel.text = 'Score: '+this.scoreCollected;
         })
+        
+        // Listen to the 'timeUpdated' event
+        events.on('timeUpdated', (time) => {
+            if (this.game.getTime() > 0) {
+                //this.game.getTime/
+                this.scoreCollected+=10;
+                this.scoreLabel.text = 'Score: ' + this.scoreCollected;
+            }
+            //this.timeLabel.text = 'Time: ' + time;
+        });
     }
 
     update() {

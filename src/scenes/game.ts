@@ -125,6 +125,8 @@ export default class Game extends Phaser.Scene {
             console.log(this.cameras.main.scrollY);
             this.spaceship.setY(this.spaceship.y - scrollDiff) // sync scroll speed with ship speed
         }
+        // Emit the time event with the current time value
+        events.emit('timeUpdated', this.time.now);
 
 
         // Alternate control option (rotation)
@@ -196,7 +198,9 @@ export default class Game extends Phaser.Scene {
         if(this.cursors.shift.isDown && shiftJustPressed ){
             this.createLaser(this.spaceship.x, this.spaceship.y - 50, 0, this.shootSpeed, Math.PI)
         }
+        
     }
+
 
     // create a laser sprite
     createLaser(x: number, y: number, xSpeed: number, ySpeed:number, radians:number = 0){
@@ -266,5 +270,14 @@ export default class Game extends Phaser.Scene {
             } ),
             repeat:1
         });
+    }
+    getTime() {
+        return this.sys.game.getTime();
+        const currentTime = this.getTime();
+        if(currentTime >0){
+          key:'scoreCollected'
+        }
+        //console.log(currentTime);
+        
     }
 }
