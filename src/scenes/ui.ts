@@ -35,6 +35,10 @@ export default class UI extends Phaser.Scene {
         this.scoreLabel = this.add.text(50, 50, 'Score: 0', {
             fontSize: '32px', color: 'yellow'
         });
+        events.on('scoreCollected', () => {
+            this.scoreCollected++;
+            this.scoreLabel.text = 'Score: '+this.powerupsCollected;
+        })
     }
 
     update() {

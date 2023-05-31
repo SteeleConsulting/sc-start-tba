@@ -108,6 +108,7 @@ export default class Game extends Phaser.Scene {
         this.explosionSound = this.sound.add('explosion');
         this.laserSound = this.sound.add('laser'); 
         this.backgroundMusic = this.sound.add('pulsar');
+        
 
     }
 
