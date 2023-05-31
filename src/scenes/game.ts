@@ -240,6 +240,9 @@ export default class Game extends Phaser.Scene {
                 spriteB.destroy();
                 this.explosionSound.play();
                 events.emit('enemy-explode');
+
+                console.log("here");
+                event?.stopImmediatePropagation(); 
             }
 
         });
