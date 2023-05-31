@@ -41,20 +41,28 @@ export default class UI extends Phaser.Scene {
         this.scoreLabel = this.add.text(20, 18, 'Score: 0', {
             fontSize: '32px', color: 'yellow'
         });
-        events.on('scoreCollected', () => {
-            this.scoreCollected++;
-            this.scoreLabel.text = 'Score: '+this.scoreCollected;
-        })
         
         // Listen to the 'timeUpdated' event
+        
         events.on('timeUpdated', (time) => {
-            if (this.game.getTime() > 0) {
-                //this.game.getTime/
-                this.scoreCollected+=10;
-                this.scoreLabel.text = 'Score: ' + this.scoreCollected;
-            }
-            //this.timeLabel.text = 'Time: ' + time;
+            this.time.addEvent({
+                delay: 1000, // every second
+                callback: () => {
+                  // Check if the time is greater than 0
+                  if (this.game.getTime() > 0) {
+                    this.scoreCollected+=1;
+                    this.scoreLabel.text = 'Score: ' + this.scoreCollected;
+                  }
+                },
+                loop: true // Repeat the timer indefinitely
+              });
+            
         });
+        
+        events.on('enemy-explode', () => {
+            this.scoreCollected+=100;
+            this.scoreLabel.text = 'Score: ' + this.scoreCollected;
+        })
     }
 
     update() {
