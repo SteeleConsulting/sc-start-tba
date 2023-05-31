@@ -115,42 +115,85 @@ export default class Game extends Phaser.Scene {
         if (!this.spaceship?.active)   // This checks if the spaceship has been created yet
             return;
         
-        //this.cameras.main  //look here at how to adjust the camera view 
-        //moves camera until it reaches the very top.
+        // move camera up
+        // this.cameras.main  //look here at how to adjust the camera view 
         if(this.cameras.main.scrollY >= 0){
+            var scrollDiff = this.cameras.main.scrollY // var to track scroll movement for ship
             this.cameras.main.scrollY = this.cameras.main.scrollY + this.scrollSpeed;
+            scrollDiff -= this.cameras.main.scrollY 
             console.log(this.cameras.main.scrollY);
+            this.spaceship.setY(this.spaceship.y - scrollDiff) // sync scroll speed with ship speed
         }
+
+
+        // Alternate control option (rotation)
+        //  Does not currently work
+        // if (this.cursors.left.isDown){
+        //     this.spaceship.setVelocityX(-this.speed);
+        //     if (this.spaceship.x < 50) this.spaceship.setX(50);    // left boundry
+        //     this.spaceship.flipX = false;
+        //     if (this.cursors.down.isDown){
+        //         this.spaceship.setRotation(0.785398)
+        //         this.spaceship.flipY = true;
+        //     } else if (this.cursors.up.isDown){
+        //         this.spaceship.setRotation(2.0944)
+        //         this.spaceship.flipY = true;
+        //     }
+        // } else if (this.cursors.right.isDown){
+        //     this.spaceship.setVelocityX(this.speed);
+        //     if (this.spaceship.x > 1550) this.spaceship.setX(1550);    // right boundry
+        //     this.spaceship.flipX = false;
+        //     if (this.cursors.down.isDown){
+        //         this.spaceship.setRotation(3.66519)
+        //         this.spaceship.flipY = false;
+        //     } else if (this.cursors.up.isDown){
+        //         this.spaceship.setRotation(5.23599)
+        //         this.spaceship.flipY = false;
+        //     }
+        // } else if (this.cursors.up.isDown){
+        //     this.spaceship.setVelocityY(-this.speed)
+        //     if (this.spaceship.y < this.cameras.main.scrollY + 110) this.spaceship.setY(this.cameras.main.scrollY + 110);
+        //     this.spaceship.flipY = false;
+        // } else if (this.cursors.down.isDown){
+        //     this.spaceship.setVelocityY(this.speed)
+        //     if (this.spaceship.y > this.cameras.main.scrollY +  965) this.spaceship.setY(this.cameras.main.scrollY + 965);
+        //     this.spaceship.flipY = false;
+        // }
+        // else{
+        //     this.spaceship.setVelocityX(0);
+        //     this.spaceship.setVelocityY(0);
+        // }
+
+
+        //------------------------------------------
 
         // handle keyboard input
         if (this.cursors.left.isDown){
             this.spaceship.setVelocityX(-this.speed);
             if (this.spaceship.x < 50) this.spaceship.setX(50);    // left boundry
             this.spaceship.flipX = true;
-        }
-        else if (this.cursors.right.isDown){
+        } else if (this.cursors.right.isDown){
             this.spaceship.setVelocityX(this.speed);
             if (this.spaceship.x > 1550) this.spaceship.setX(1550);    // right boundry
             this.spaceship.flipX = false;
         } else if (this.cursors.up.isDown){
             this.spaceship.setVelocityY(-this.speed)
-            if (this.spaceship.y < 5500 ) this.spaceship.setY(5500);
+            if (this.spaceship.y < this.cameras.main.scrollY + 110) this.spaceship.setY(this.cameras.main.scrollY + 110);
             this.spaceship.flipY = false;
-            console.log(this.spaceship.y)
         } else if (this.cursors.down.isDown){
             this.spaceship.setVelocityY(this.speed)
-            if (this.spaceship.y > 6430) this.spaceship.setY(6430);
-            this.spaceship.flipY = true;
-            console.log(this.spaceship.y)
-        }
-        else{
+            if (this.spaceship.y > this.cameras.main.scrollY +  965) this.spaceship.setY(this.cameras.main.scrollY + 965);
+            this.spaceship.flipY = false;
+        } else{
             this.spaceship.setVelocityX(0);
-            this.spaceship.setVelocityY(0)
+            this.spaceship.setVelocityY(0);
         }
 
+        //TODO: Add ability to hold down shift to attack continuously with a delay between shots
+        //      And put a delay so shots are limited by shootSpeed variable for the sake of powerups
         const shiftJustPressed = Phaser.Input.Keyboard.JustDown(this.cursors.shift);   // this is to make sure it only happens once per key press
-        if(this.cursors.shift.isDown && shiftJustPressed){
-            // do something here
+        if(this.cursors.shift.isDown && shiftJustPressed ){
+            this.createLaser(this.spaceship.x, this.spaceship.y - 50, 0, this.shootSpeed, Math.PI)
         }
     }
 
@@ -159,6 +202,7 @@ export default class Game extends Phaser.Scene {
         var laser = this.matter.add.sprite(x, y, 'space', 'Lasers/laserGreen08.png', { isSensor: true });
         this.upgraded;
         laser.setData('type', 'laser');
+        laser.setVelocityY(ySpeed) // add laser vertical movement
         laser.setOnCollide((data: MatterJS.ICollisionPair) => {
 
             const spriteA = (data.bodyA as MatterJS.BodyType).gameObject as Phaser.Physics.Matter.Sprite
@@ -182,7 +226,7 @@ export default class Game extends Phaser.Scene {
         });
         
         // destroy laser object after 500ms, otherwise lasers stay in memory and slow down the game
-        setTimeout((laser) => laser.destroy(), 500, laser);   
+        setTimeout((laser) => laser.destroy(), 1000, laser);   
     }
 
 
