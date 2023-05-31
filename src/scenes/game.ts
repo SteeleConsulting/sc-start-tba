@@ -6,6 +6,7 @@ export default class Game extends Phaser.Scene {
 
 	private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
     private spaceship?: Phaser.Physics.Matter.Sprite;
+    // private spaceship2?: Phaser.Physics.Matter.Sprite;
     private upgraded: boolean = false;
 
     private speed = 5;
@@ -103,6 +104,36 @@ export default class Game extends Phaser.Scene {
                         }
                         
                     });
+
+                    // this.cameras.main.scrollY = y-800;   // set camera to spaceship Y coordinates
+                    // this.spaceship2 = this.matter.add.sprite(x, y, 'space')
+                    //     .play('spaceship-idle');
+
+                    // // configure collision detection
+                    // this.spaceship2.setOnCollide((data: MatterJS.ICollisionPair) => {
+                    //     const spriteA = (data.bodyA as MatterJS.BodyType).gameObject as Phaser.Physics.Matter.Sprite
+                    //     const spriteB = (data.bodyB as MatterJS.BodyType).gameObject as Phaser.Physics.Matter.Sprite
+
+                    //     if (!spriteA?.getData || !spriteB?.getData)
+                    //         return;
+                    //     if (spriteA?.getData('type') == 'speedup') {
+                    //         console.log('collided with speedup');
+                    //         this.powerupSound.play();
+                    //     }
+                    //     if (spriteB?.getData('type') == 'speedup') {
+                    //         console.log('collided with speedup');
+                    //         this.powerupSound.play();
+                    //     }
+                    //     if (spriteA?.getData('type') == 'enemy') {
+                    //         console.log('collided with enemy');
+                    //         this.explosionSound.play();
+                    //     }
+                    //     if (spriteB?.getData('type') == 'enemy') {
+                    //         console.log('collided with enemy');
+                    //         this.explosionSound.play();
+                    //     }
+                        
+                    // });
                     break;
                 case 'speedup':
                     const speedup = this.matter.add.sprite(x, y, 'space', 'Power-ups/bolt_gold.png', {
@@ -213,6 +244,30 @@ export default class Game extends Phaser.Scene {
             this.spaceship.setVelocityX(0);
             this.spaceship.setVelocityY(0);
         }
+
+        // if()
+        // if (this.cursors.left.isDown){
+        //     this.spaceship2.setVelocityX(-this.speed);
+        //     if (this.spaceship2.x < 50) this.spaceship2.setX(50);    // left boundry
+        //     else this.cameras.main.scrollX = this.cameras.main.scrollX - 0.2
+        //     this.spaceship2.flipX = true;
+        // } else if (this.cursors.right.isDown){
+        //     this.spaceship2.setVelocityX(this.speed);
+        //     if (this.spaceship2.x > 1550) this.spaceship2.setX(1550);    // right boundry 
+        //     else this.cameras.main.scrollX = this.cameras.main.scrollX + 0.2
+        //     this.spaceship2.flipX = false;
+        // } else if (this.cursors.up.isDown){
+        //     this.spaceship2.setVelocityY(-this.speed)
+        //     if (this.spaceship2.y < this.cameras.main.scrollY + 110) this.spaceship2.setY(this.cameras.main.scrollY + 110);
+        //     this.spaceship2.flipY = false;
+        // } else if (this.cursors..isDown){
+        //     this.spaceship2.setVelocityY(this.speed)
+        //     if (this.spaceship2.y > this.cameras.main.scrollY +  965) this.spaceship2.setY(this.cameras.main.scrollY + 965);
+        //     this.spaceship2.flipY = false;
+        // } else{
+        //     this.spaceship2.setVelocityX(0);
+        //     this.spaceship2.setVelocityY(0);
+        // }
 
         //create enemies on a random number check
         if(Math.random()*1000 >998 ){
