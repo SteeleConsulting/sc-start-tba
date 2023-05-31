@@ -356,7 +356,7 @@ export default class Game extends Phaser.Scene {
         }
 
         //Destroys enemy object, enemies can live off screen, there will be a 10 second time to delete enemies
-        setTimeout((enemy) => enemy.destroy(), 14000, enemy);
+        setTimeout((enemy, enemy1, enemy2, enemy3) => enemy.destroy(), 14000, enemy);
         
     }
 
