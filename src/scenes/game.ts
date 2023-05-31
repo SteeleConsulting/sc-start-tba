@@ -1,5 +1,5 @@
 // HERE - BIANKA
-import Phaser from "phaser";
+import Phaser, { Data } from "phaser";
 import { sharedInstance as events } from "../helpers/eventCenter";    // this is the shared events emitter
 
 export default class Game extends Phaser.Scene {
@@ -143,7 +143,7 @@ export default class Game extends Phaser.Scene {
                     speedup.setBounce(1);
                     speedup.setData('type', 'speedup');
                     break;
-
+                /*
                 case 'enemy':
                     const enemy = this.matter.add.sprite(x,y,'space','Enemies/enemyRed2.png',{
                         isSensor:true
@@ -151,6 +151,7 @@ export default class Game extends Phaser.Scene {
                     enemy.setData('type','enemy');
                     this.createEnemyAnimations();
                     break;
+                */
             }
         });
 
@@ -270,8 +271,8 @@ export default class Game extends Phaser.Scene {
         // }
 
         //create enemies on a random number check
-        if(Math.random()*1000 >998 ){
-                this.createEnemy(Math.random()*1500+50,this.cameras.main.scrollY +90);
+        if(Math.random()*100 >99.4 ){
+                this.createEnemy(Math.random()*1500,this.cameras.main.scrollY +90);
         }
 
         //TODO: Add ability to hold down shift to attack continuously with a delay between shots
@@ -298,8 +299,8 @@ export default class Game extends Phaser.Scene {
 
             if (!spriteA?.getData || !spriteB?.getData)
                 return;
-            
-            if (spriteA?.getData('type') == 'enemy') {
+            //detects all enemy types
+            if (spriteA?.getData('type') == 'enemy1' || spriteA?.getData('type') == 'enemy2' || spriteA?.getData('type') == 'enemy3') {
                 console.log('laser collided with enemy');
                 spriteA.destroy();
                 spriteB.destroy();
@@ -317,41 +318,48 @@ export default class Game extends Phaser.Scene {
     }
 
     createEnemy(x:number,y:number){
-        var enemy = this.matter.add.sprite(x,y,'space','Enemies/enemyRed2.png',{
+        var chance = '';
+        var result = Math.floor(Math.random()*3+1);
+        console.log('Spawned ',result);
+        switch(result){
+        case 3:
+            chance = 'Enemies/enemyBlue3.png';
+            break;
+        case 2:
+            chance = 'Enemies/enemyGreen2.png';
+            break;
+        default:
+            chance = 'Enemies/enemyRed1.png';
+        }
+        var enemy = this.matter.add.sprite(x,y,'space',chance,{
             isSensor:true
         });
-        enemy.setData('type','enemy');
-        /*
-        enemy.setOnCollide((data: MatterJS.ICollisionPair) => {
+        //sets enemy type to a specific type
+        enemy.setData('type',('enemy'+result));
+        //sets behavior depending on time
+        //below is behavior of blue enemy, zig zagging on screen
+        if(enemy.getData('type') == 'enemy3'){
+            var rem = 1;
+            if(Math.floor(Math.random()*2+1) == 2)
+                rem = rem * -1;
+            enemy.setVelocityX(this.normalSpeed*rem);
+            enemy.setVelocityY(this.normalSpeed);
+            setTimeout((enemy) => {
+                rem = rem * -1,
+                enemy.setVelocityX(this.normalSpeed*rem),
+                enemy.setVelocityY(this.normalSpeed)
+            }, 1500, enemy);
+        }
+        //below is the behavior of the red emeies, shooting lasers at player
+        else if(enemy.getData('type') == 'enemy1'){
 
-            const spriteA = (data.bodyA as MatterJS.BodyType).gameObject as Phaser.Physics.Matter.Sprite
-            const spriteB = (data.bodyB as MatterJS.BodyType).gameObject as Phaser.Physics.Matter.Sprite
-            var health = 1;
-            console.log('i made it',health);
-            if (!spriteA?.getData || !spriteB?.getData)
-                return;
-            
+        }
 
-            
-            if (spriteA?.getData('type') == 'laser') {
-                console.log('enemy took damage');
-                health--;
-            }
-            if (spriteB?.getData('type') == 'laser') {
-                console.log('enemy took damage');
-                health--;
-            }
-            if(health<=0){
-                console.log('enemy died');
-                spriteA.destroy();
-                spriteB.destroy();
-                this.explosionSound.play();
-                events.emit('enemy-explode');
-            }
-            console.log('i made it',health);
-        });
-        */
+        //Destroys enemy object, enemies can live off screen, there will be a 10 second time to delete enemies
+        setTimeout((enemy) => enemy.destroy(), 14000, enemy);
+        
     }
+
 
     private createSpaceshipAnimations(){
         this.anims.create({
