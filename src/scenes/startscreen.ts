@@ -43,7 +43,7 @@ export default class StartScreen extends Phaser.Scene {
     update() {
         if(this.buttonClick == true){
             console.log('start button clicked')
-            this.scene.start('game')
+            this.scene.start('players')
             this.buttonClick = false
         }
     }
