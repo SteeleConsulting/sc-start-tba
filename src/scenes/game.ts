@@ -1,5 +1,5 @@
 // HERE - BIANKA
-import Phaser from "phaser";
+import Phaser, { Data } from "phaser";
 import { sharedInstance as events } from "../helpers/eventCenter";    // this is the shared events emitter
 
 export default class Game extends Phaser.Scene {
@@ -244,8 +244,8 @@ export default class Game extends Phaser.Scene {
 
             if (!spriteA?.getData || !spriteB?.getData)
                 return;
-            
-            if (spriteA?.getData('type') == 'enemy') {
+            //detects all enemy types
+            if (spriteA?.getData('type') == 'enemy1' || spriteA?.getData('type') == 'enemy2' || spriteA?.getData('type') == 'enemy3') {
                 console.log('laser collided with enemy');
                 spriteA.destroy();
                 spriteB.destroy();
@@ -266,18 +266,45 @@ export default class Game extends Phaser.Scene {
         var chance = '';
         var result = Math.floor(Math.random()*3+1);
         console.log('Spawned ',result);
-        if(result == 3)
-            chance = 'Enemies/enemyRed3.png';
-        else if (result == 2)
-            chance = 'Enemies/enemyRed2.png';
-        else
+        switch(result){
+        case 3:
+            chance = 'Enemies/enemyBlue3.png';
+            break;
+        case 2:
+            chance = 'Enemies/enemyGreen2.png';
+            break;
+        default:
             chance = 'Enemies/enemyRed1.png';
+        }
         var enemy = this.matter.add.sprite(x,y,'space',chance,{
             isSensor:true
         });
-        enemy.setData('type','enemy');
-        //got rid of collision
+        //sets enemy type to a specific type
+        enemy.setData('type',('enemy'+result));
+        //sets behavior depending on time
+        //below is behavior of blue enemy, zig zagging on screen
+        if(enemy.getData('type') == 'enemy3'){
+            var rem = 1;
+            if(Math.floor(Math.random()*2+1) == 2)
+                rem = rem * -1;
+            enemy.setVelocityX(this.normalSpeed*rem);
+            enemy.setVelocityY(this.normalSpeed);
+            setTimeout((enemy) => {
+                rem = rem * -1,
+                enemy.setVelocityX(this.normalSpeed*rem),
+                enemy.setVelocityY(this.normalSpeed)
+            }, 1500, enemy);
+        }
+        //below is the behavior of the red emeies, shooting lasers at player
+        else if(enemy.getData('type') == 'enemy1'){
+
+        }
+
+        //Destroys enemy object, enemies can live off screen, there will be a 10 second time to delete enemies
+        setTimeout((enemy) => enemy.destroy(), 14000, enemy);
+        
     }
+
 
     private createSpaceshipAnimations(){
         this.anims.create({
