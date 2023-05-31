@@ -27,11 +27,13 @@ export default class Game extends Phaser.Scene {
 		this.cursors = this.input.keyboard.createCursorKeys();  // setup keyboard input
 
         // load the other scenes
+        // this.scene.launch('start');
         this.scene.launch('ui');
         this.scene.launch('gameover');
     }
 
     preload(){
+        
         this.load.image('star', 'assets/star2.png');
         this.load.image('boss', 'assets/boss.png');
         this.load.atlas('explosion', 'assets/explosion.png', 'assets/explosion.json');
@@ -51,6 +53,7 @@ export default class Game extends Phaser.Scene {
     }
 
     create(){
+        
         const { width, height } = this.scale;  // width and height of the scene
 
         // Add random stars background
