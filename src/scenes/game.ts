@@ -27,11 +27,13 @@ export default class Game extends Phaser.Scene {
 		this.cursors = this.input.keyboard.createCursorKeys();  // setup keyboard input
 
         // load the other scenes
+        // this.scene.launch('start');
         this.scene.launch('ui');
         this.scene.launch('gameover');
     }
 
     preload(){
+        
         this.load.image('star', 'assets/star2.png');
         this.load.image('boss', 'assets/boss.png');
         this.load.atlas('explosion', 'assets/explosion.png', 'assets/explosion.json');
@@ -51,6 +53,7 @@ export default class Game extends Phaser.Scene {
     }
 
     create(){
+        
         const { width, height } = this.scale;  // width and height of the scene
 
         // Add random stars background
@@ -191,10 +194,12 @@ export default class Game extends Phaser.Scene {
         if (this.cursors.left.isDown){
             this.spaceship.setVelocityX(-this.speed);
             if (this.spaceship.x < 50) this.spaceship.setX(50);    // left boundry
+            else this.cameras.main.scrollX = this.cameras.main.scrollX - 0.2
             this.spaceship.flipX = true;
         } else if (this.cursors.right.isDown){
             this.spaceship.setVelocityX(this.speed);
-            if (this.spaceship.x > 1550) this.spaceship.setX(1550);    // right boundry
+            if (this.spaceship.x > 1550) this.spaceship.setX(1550);    // right boundry 
+            else this.cameras.main.scrollX = this.cameras.main.scrollX + 0.2
             this.spaceship.flipX = false;
         } else if (this.cursors.up.isDown){
             this.spaceship.setVelocityY(-this.speed)
@@ -244,11 +249,10 @@ export default class Game extends Phaser.Scene {
                 spriteA.destroy();
                 spriteB.destroy();
                 this.explosionSound.play();
-                //console.log ('enemy event');
-                events.emit('enemy-explode');
-                console.log ('enemy event');
-
                 
+                events.emit('enemy-explode');
+                
+
             }
 
         });
