@@ -1,0 +1,8 @@
+{ 
+	"filename": "teamLogo.png",
+	"frame": {"x":392,"y":838,"w":99,"h":76},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":99,"h":76},
+	"sourceSize": {"w":99,"h":76}
+}

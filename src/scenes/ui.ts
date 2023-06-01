@@ -1,6 +1,8 @@
+
+// Most updated at 8:57
 import Phaser, { NONE, Physics } from "phaser";
 import { sharedInstance as events } from "../helpers/eventCenter";
-//import { sharedInstance as events } from "../helpers/eventCenter";
+
 
 
 export default class UI extends Phaser.Scene {
@@ -9,8 +11,13 @@ export default class UI extends Phaser.Scene {
     private powerupsCollected: number = 0;
     private scoreLabel!: Phaser.GameObjects.Text;
     private scoreCollected: number = 0;
-    private timeLabel!: Phaser.GameObjects.Text;
-    private lifeCounter!: [Phaser.GameObjects.Sprite];
+    private livesLabel!: Phaser.GameObjects.Text;
+    private livesLeft: number = 3;
+    
+    
+    graphics;
+    
+
 
 
     colorway = {
@@ -48,7 +55,6 @@ export default class UI extends Phaser.Scene {
         this.makeButton(0, height,width, -20,this.colorway['border2'], 0)
 
 
-        this.lifeUpdate(3)
 
 
         this.powerupsLabel = this.add.text(1000, 18, 'PowerUps: 0', {
@@ -69,58 +75,48 @@ export default class UI extends Phaser.Scene {
         
         // Listen to the 'timeUpdated' event
         
-        events.on('timeUpdated', (time) => {
-            this.time.addEvent({
-                delay: 1000, // every second
-                callback: () => {
-                  // Check if the time is greater than 0
-                  if (this.game.getTime() > 0) {
-                    this.scoreCollected+=1;
-                    this.scoreLabel.text = 'Score: ' + this.scoreCollected;
-                  }
-                },
-                loop: true // Repeat the timer indefinitely
-              });
-            
-        });
         
-        events.on('enemy-explode', () => {
+        events.on('green-50', () => {
+            this.scoreCollected+=50;
+            this.scoreLabel.text = 'Score: ' + this.scoreCollected;
+        });
+        events.on('red-100', () => {
             this.scoreCollected+=100;
             this.scoreLabel.text = 'Score: ' + this.scoreCollected;
-        })
+        });
+        events.on('blue-150', () => {
+            this.scoreCollected+=150;
+            this.scoreLabel.text = 'Score: ' + this.scoreCollected;
+        });
+
+
+       // LIVES 
+        
+        this.livesLabel = this.add.text(20, 18, 'Lives: 3', {
+            fontSize: '32px', color: 'yellow'
+        });
+        
+        
+        // lives left when collide with enemy 
+        events.on('collide-enemy', () => {
+                if(this.livesLeft>0){
+                    this.livesLeft --;
+                    this.livesLabel.text = 'Lives: ' + this.livesLeft;
+                }else{
+                    events.emit('gameover');
+                }    
+        });
+       
+
+        
+        
     }
 
     update() {
 
     }
-
-
-    lifeUpdate(lives : number) {
-        var life1, life2, life3
-        if(lives >= 3) {
-            life3 = this.matter.add.image(130, 30, 'space', 'UI/playerLife1_blue.png')
-        } else{
-            life3.destroy()
-        }
-        if(lives >= 2) {
-            life2 = this.matter.add.image(80, 30, 'space', 'UI/playerLife1_blue.png')
-        } else{
-            life2.destroy()
-        }
-        if(lives >= 1) {
-            life1 = this.matter.add.image(30, 30, 'space', 'UI/playerLife1_blue.png')
-        } else{
-            life1.destroy()
-        }
-        
-        
-    }
-
-    // lifeClear(){
-    //     this.lifeBox.destroy(true)
-    // }
-
     
+
     // creates a rounded rectangle
     makeButton(x : number, y : number, w : number, h : number, objColor : number, curve: number){
         const { width, height } = this.scale;
