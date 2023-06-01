@@ -1,4 +1,4 @@
-import Phaser, { Physics } from "phaser";
+import Phaser, { NONE, Physics } from "phaser";
 import { sharedInstance as events } from "../helpers/eventCenter";
 //import { sharedInstance as events } from "../helpers/eventCenter";
 
@@ -22,7 +22,6 @@ export default class UI extends Phaser.Scene {
 
     preload(){
         this.load.image('life', 'UI/playerLife1_blue.png');
-
         this.load.atlas('space', 'assets/space-shooter/space-shooter-tileset.png', 'assets/space-shooter/space-shooter-tileset.json');  
         
 
@@ -46,8 +45,6 @@ export default class UI extends Phaser.Scene {
 
 
         this.lifeUpdate(3)
-        this.lifeUpdate(2)
-        this.lifeUpdate(0)
 
 
         this.powerupsLabel = this.add.text(1000, 18, 'PowerUps: 0', {
@@ -93,16 +90,29 @@ export default class UI extends Phaser.Scene {
 
     }
 
+
     lifeUpdate(lives : number) {
-        let life = [this.matter.add.image(50, 35, 'space','UI/playerLife1_blue.png')]
-        if(lives == 0) life[0].destroy
-        for(let i = 1; i < 3; i++){
-            if(i >= lives){ life[i].destroy() }
-            else {life[i] = this.matter.add.image(50 * (i + 1), 35, 'space','UI/playerLife1_blue.png')}
+        var life1, life2, life3
+        if(lives >= 3) {
+            life3 = this.matter.add.image(130, 30, 'space', 'UI/playerLife1_blue.png')
+        } else{
+            life3.destroy()
+        }
+        if(lives >= 2) {
+            life2 = this.matter.add.image(80, 30, 'space', 'UI/playerLife1_blue.png')
+        } else{
+            life2.destroy()
+        }
+        if(lives >= 1) {
+            life1 = this.matter.add.image(30, 30, 'space', 'UI/playerLife1_blue.png')
+        } else{
+            life1.destroy()
         }
         
+        
     }
-    // lifeClear(lives : number){
-    //     Phaser.GameObjects.Sprite.
+
+    // lifeClear(){
+    //     this.lifeBox.destroy(true)
     // }
 }

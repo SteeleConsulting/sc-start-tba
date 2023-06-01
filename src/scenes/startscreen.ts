@@ -1,80 +1,68 @@
 import Phaser from "phaser";
 import { sharedInstance as events } from "../helpers/eventCenter";
+import WebFontFile from "~/WebFontFile";
 
 export default class StartScreen extends Phaser.Scene {
     constructor() {
         super('start');
     }
     
-    graphics;
-    startButtonBack;
-    startButtonFront;
-    startButtonText;
-    background;
-    titleText;
-    gameClick = false
-    creditClick = false
-    backClick = false
+    //graphics;
+    bg;
+    startButton
+    startText
     credBox;
 
     init() { }
 
     preload(){
-        
+        const fonts = new WebFontFile(this.load, 'Quicksand')
+		this.load.addFile(fonts)
+
         const { width, height } = this.scale;
-        this.background = this.add.graphics()
-        this.background.fillStyle(0x14213D, 1)
-        this.background.fillRoundedRect(0,0,width,height,0)
 
-        this.titleText = this.add.text(width / 2 - 270, height / 2 - 200, 'GAME TITLE', {
-            fontSize: '90px', color : '#E5E5E5'
-        })
-        
-
-        this.startButtonBack = this.add.graphics();
-        this.startButtonBack.fillStyle(0xE5E5E5, 1);
-        this.startButtonBack.fillRoundedRect(width / 2 - 300, height / 2 - 8, 600, 150, 15);
-
-        this.startButtonFront = this.add.graphics();
-        this.startButtonFront.fillStyle(0xFCA311, 1);
-        this.startButtonFront.fillRoundedRect(width / 2 - 290, height / 2, 600, 150, 15);
-
-        this.startButtonText = this.add.text(width / 2 - 220, height / 2 + 40, 'START GAME', {
-            fontSize: '75px', color : '#000000'
-        });
-        
-        this.startButtonBack.setInteractive().on('pointerdown', () => (this.gameClick = true))
-        this.startButtonFront.setInteractive().on('pointerdown', () => (this.gameClick = true));
-        this.startButtonText.setInteractive().on('pointerdown', () => (this.gameClick = true ))
-
-        this.add.text(30, height - 60, 'INSERT STEELE\n  LOGO HERE')
-        this.add.text(width - 165, height - 65, 'CREDITS', {fontSize: '30px', color : '#E5E5E5'})
-        .setInteractive().on('pointerdown', () => (this.creditClick = true))
+        var bgRect = new Phaser.Geom.Rectangle(0, 0, width, height)
+        var bg = this.add.graphics({fillStyle: {color : 0x14213D } })
+        bg.fillRoundedRect(bgRect.x, bgRect.y, bgRect.width, bgRect.height, 0);
     }
 
-    create(){ }
+    create() {
+        const { width, height } = this.scale;
 
-    update() {
-        if(this.gameClick == true){
-            console.log('start button clicked')
-            this.scene.start('players')
-            this.gameClick = false
-        }
-        if(this.creditClick == true){
-            console.log('open credits')
-            this.openCredits()
-            this.creditClick = false
-        }
-        if(this.backClick == true){
-            console.log('close credits')
-            this.hideCredBox()
-            this.backClick = false
-        }
+        var startRect = new Phaser.Geom.Rectangle(width / 2 - 255, height / 2 + 5, 500, 120)
+        
+        var startButtonBack = this.add.graphics({fillStyle : {color : 0xE5E5E5}})
+        startButtonBack.fillRoundedRect(startRect.x - 10, startRect.y - 5, startRect.width, startRect.height, 15)
+
+        this.startButton = this.add.graphics({fillStyle : {color : 0xFCA311}})
+        this.startButton.fillRoundedRect(startRect.x, startRect.y, startRect.width, startRect.height, 15)
+        .setInteractive().on('pointerdown', () => (this.selectPlayers(), console.log('boxclicked')));
+
+        var titleText = this.add.text(width / 2 - 285, height / 2 - 200, 'GAME TITLE', {
+            fontFamily : 'Quicksand', fontSize: '100px', color : '#E5E5E5'
+        })
+
+
+        this.startText = this.add.text(width / 2 - 225, height / 2 + 32, 'START GAME', {
+            fontFamily: 'Quicksand', fontSize: '70px', color : '#000000'
+        }).setInteractive().on('pointerdown', () => (this.selectPlayers(), console.log('textclicked')));
+
+        this.add.text(30, height - 60, 'INSERT STEELE\n  LOGO HERE', {
+            fontFamily: 'Quicksand', color : '#E5E5E5'
+        })
+        this.add.text(width - 165, height - 65, 'CREDITS', {
+            fontFamily : 'Quicksand', fontSize: '30px', color : '#E5E5E5'
+        }).setInteractive().on('pointerdown', () => (this.openCredits()))
+    }
+
+    update() { }
+
+    selectPlayers(){
+        this.scene.start('players')
     }
 
 
     openCredits() {
-    
         let {width, height} = this.scale
         if (this.credBox) {
             this.credBox.destroy();
@@ -82,8 +70,8 @@ export default class StartScreen extends Phaser.Scene {
         
         var credBox = this.add.group();
         var rect = new Phaser.Geom.Rectangle(width / 4, height / 4, width / 2, height / 2)
-        var credBack = this.add.graphics({ fillStyle: { color: 0xFCA311 } });
-        var credBack2 = this.add.graphics({fillStyle: {color : 0xE5E5E5 } })
+        var credBack = this.add.graphics({ fillStyle: { color : 0xFCA311 } });
+        var credBack2 = this.add.graphics({fillStyle: { color : 0xE5E5E5 } })
         credBack.fillRoundedRect(rect.x, rect.y, rect.width, rect.height, 30);
         credBack2.fillRoundedRect(rect.x + 5, rect.y + 5, rect.width, rect.height, 30);
         
@@ -93,7 +81,7 @@ export default class StartScreen extends Phaser.Scene {
             + '\n\t \tBianka Boudreaux' 
             + '\n\t \tGabriela Sigala Acosta' 
             + '\n\t \tIsmael Parra'
-            + '\n\t \tAlexander Cabos', {fontSize : '40px', color : '#000000'})
+            + '\n\t \tAlexander Cabos', {fontFamily : 'Quicksand', fontSize : '40px', color : '#000000'})
 
 
         
@@ -104,7 +92,9 @@ export default class StartScreen extends Phaser.Scene {
         var credButton2 = this.add.graphics({ fillStyle: { color: 0x14213D } });
             credButton2.fillRoundedRect(width / 2 - 140, height / 2 + 125, width / 6, height / 12, 15)
         
-        var credButtonText = this.add.text(width / 2 - 115, height / 2 + 150, 'Back to Menu', {fontSize : '30px', color : '#E5E5E5'})
+        var credButtonText = this.add.text(width / 2 - 115, height / 2 + 150, 'Back to Menu', {
+            fontFamily : 'Quicksand', fontSize : '30px', color : '#E5E5E5'
+        })
         
         credBox.add(credBack);
         credBox.add(credBack2);
@@ -114,17 +104,15 @@ export default class StartScreen extends Phaser.Scene {
         credBox.add(credButtonText);
         
         
-        credButton1.setInteractive().on('pointerdown', () => this.backClick = true)
-        credButton2.setInteractive().on('pointerdown', () => this.backClick = true)
-        credButtonText.setInteractive().on('pointerdown', () => this.backClick = true)
+        credButton1.setInteractive().on('pointerdown', () => this.hideCredBox())
+        credButton2.setInteractive().on('pointerdown', () => this.hideCredBox())
+        credButtonText.setInteractive().on('pointerdown', () => this.hideCredBox())
         this.credBox = credBox;
     }
      
     hideCredBox() {
-     
         console.log('hide');
         this.credBox.destroy(true)
-     
     }
 }
 
