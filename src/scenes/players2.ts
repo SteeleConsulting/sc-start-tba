@@ -30,7 +30,7 @@ export default class Players2 extends Phaser.Scene {
 		this.cursors = this.input.keyboard.createCursorKeys();  // setup keyboard input
         // load the other scenes
         // this.scene.launch('start');
-        this.scene.launch('ui');
+        this.scene.launch('ui2');
         this.scene.launch('gameover');
     }
 
@@ -79,6 +79,11 @@ export default class Players2 extends Phaser.Scene {
                         .play('spaceship-idle');
                     // this.spaceship.setCollisionGroup(1); 
                     // this.spaceship.setCollidesWith(0); 
+                    /*
+                    this.spaceship.setCollisionGroup(1); 
+                    this.spaceship.setCollidesWith(3); 
+                    */
+                    
 
                     // configure collision detection
                     this.spaceship.setOnCollide((data: MatterJS.ICollisionPair) => {
@@ -102,13 +107,19 @@ export default class Players2 extends Phaser.Scene {
                             spriteB.destroy(); 
                             this.powerupSound.play();
                         } 
-                        if (spriteA?.getData('type') == 'enemy') {
+                        if (spriteA?.getData('type') == 'enemy1' || spriteA?.getData('type') == 'enemy2' || spriteA?.getData('type') == 'enemy3') {
+                            events.emit('collide-enemy');
                             console.log('collided with enemy');
                             this.explosionSound.play();
+                            
                         }
-                        if (spriteB?.getData('type') == 'enemy') {
+                        
+                        if (spriteB?.getData('type') == 'enemy1' || spriteB?.getData('type') == 'enemy2' || spriteB?.getData('type') == 'enemy3') {
+                            events.emit('collide-enemy');
                             console.log('collided with enemy');
+
                             this.explosionSound.play();
+                            
                         }
                         
                     });
@@ -117,11 +128,16 @@ export default class Players2 extends Phaser.Scene {
                         .play('spaceship-idle2');
                     // this.spaceship2.setCollisionGroup(2); 
                     // this.spaceship2.setCollidesWith(0)
+                    /*
+                    this.spaceship2.setCollisionGroup(2); 
+                    this.spaceship2.setCollidesWith(3)
+                    */
 
                     // configure collision detection
                     this.spaceship2.setOnCollide((data: MatterJS.ICollisionPair) => {
                         const spriteA = (data.bodyA as MatterJS.BodyType).gameObject as Phaser.Physics.Matter.Sprite
                         const spriteB = (data.bodyB as MatterJS.BodyType).gameObject as Phaser.Physics.Matter.Sprite
+                        console.log('collision detected');
 
                         if (!spriteA?.getData || !spriteB?.getData)
                             return;
@@ -139,13 +155,19 @@ export default class Players2 extends Phaser.Scene {
                             spriteB.destroy(); 
                             this.powerupSound.play();
                         } 
-                        if (spriteA?.getData('type') == 'enemy') {
+                        if (spriteA?.getData('type') == 'enemy1' || spriteA?.getData('type') == 'enemy2' || spriteA?.getData('type') == 'enemy3') {
+                            events.emit('collide-enemy');
                             console.log('collided with enemy');
                             this.explosionSound.play();
+                            
                         }
-                        if (spriteB?.getData('type') == 'enemy') {
+                        
+                        if (spriteB?.getData('type') == 'enemy1' || spriteB?.getData('type') == 'enemy2' || spriteB?.getData('type') == 'enemy3') {
+                            events.emit('collide-enemy');
                             console.log('collided with enemy');
+
                             this.explosionSound.play();
+                            
                         }
                         
                     });
@@ -196,6 +218,7 @@ export default class Players2 extends Phaser.Scene {
         this.explosionSound = this.sound.add('explosion');
         this.laserSound = this.sound.add('laser'); 
         this.backgroundMusic = this.sound.add('pulsar');
+        
         
     }
 
@@ -308,6 +331,20 @@ export default class Players2 extends Phaser.Scene {
                 return;
             //detects all enemy types
             if (spriteA?.getData('type') == 'enemy1' || spriteA?.getData('type') == 'enemy2' || spriteA?.getData('type') == 'enemy3') {
+                if((spriteB?.getData('type') == 'enemy1')){
+                    events.emit('red-100');
+               }else if(spriteB?.getData('type') == 'enemy2'){
+                events.emit('green-50');
+
+               }else{
+                events.emit('blue-150');
+               }
+                console.log('laser collided with enemy');
+                spriteA.destroy();
+                spriteB.destroy();
+                this.explosionSound.play();
+                
+                events.emit('enemy-explode');  
                 console.log('laser collided with enemy');
                 spriteA.destroy();
                 spriteB.destroy();
@@ -373,6 +410,9 @@ export default class Players2 extends Phaser.Scene {
         });
         //sets enemy type to a specific type
         enemy.setData('type',('enemy'+result));
+
+        //enemy.setCollisionGroup(3); 
+        
         //sets behavior depending on time
         //below is behavior of blue enemy, zig zagging on screen
         if(enemy.getData('type') == 'enemy3'){

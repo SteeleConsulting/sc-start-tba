@@ -2,7 +2,7 @@
 // Most updated at 8:57
 import Phaser, { NONE, Physics } from "phaser";
 import { sharedInstance as events } from "../helpers/eventCenter";
-//import { sharedInstance as events } from "../helpers/eventCenter";
+
 
 
 export default class UI extends Phaser.Scene {
@@ -11,9 +11,19 @@ export default class UI extends Phaser.Scene {
     private powerupsCollected: number = 0;
     private scoreLabel!: Phaser.GameObjects.Text;
     private scoreCollected: number = 0;
-    private timeLabel!: Phaser.GameObjects.Text;
-    private lifeCounter!: [Phaser.GameObjects.Sprite];
+    private livesLabel!: Phaser.GameObjects.Text;
+    private livesLeft: number = 3;
+    
+    
     graphics;
+    
+
+
+
+    colorway = {
+        'border1' : 0x264653,
+        'border2' : 0x2A9D8F
+    }
 
     constructor() {
         super('ui');
@@ -25,28 +35,26 @@ export default class UI extends Phaser.Scene {
     preload(){
         this.load.image('life', 'UI/playerLife1_blue.png');
         this.load.atlas('space', 'assets/space-shooter/space-shooter-tileset.png', 'assets/space-shooter/space-shooter-tileset.json');  
-        
-
     }
 
     create(){
 
+        const { width, height } = this.scale;
 
         
-        // add a text label to the screen
-        
-        this.add.rectangle(800,0,1600, 150,0x81B29A)
-        this.add.rectangle(800,1000,1600, 25,0x81B29A)
-        this.add.rectangle(0,500,25, 1000,0x81B29A)
-        this.add.rectangle(1600,500,25, 1000,0x81B29A)
-
-        this.add.rectangle(800,0,1600, 142,0x3D405B)
-        this.add.rectangle(800,1000,1600, 20,0x3D405B)
-        this.add.rectangle(0,500,20, 1000,0x3D405B)
-        this.add.rectangle(1600,500,20, 1000,0x3D405B)
+        // create UI border
+        this.makeButton(0, 0, width, 75, this.colorway['border1'], 0)
+        this.makeButton(0, 0, 30, height, this.colorway['border1'], 0)
+        this.makeButton(width, 0, -30, height,this.colorway['border1'],0)
+        this.makeButton(0, height,width, -30,this.colorway['border1'], 0)
 
 
-        this.lifeUpdate(3)
+        this.makeButton(0, 0, width, 65, this.colorway['border2'], 0)
+        this.makeButton(0, 0, 20, height, this.colorway['border2'], 0)
+        this.makeButton(width, 0, -20, height,this.colorway['border2'],0)
+        this.makeButton(0, height,width, -20,this.colorway['border2'], 0)
+
+
 
 
         this.powerupsLabel = this.add.text(1000, 18, 'PowerUps: 0', {
@@ -67,54 +75,55 @@ export default class UI extends Phaser.Scene {
         
         // Listen to the 'timeUpdated' event
         
-        events.on('timeUpdated', (time) => {
-            this.time.addEvent({
-                delay: 1000, // every second
-                callback: () => {
-                  // Check if the time is greater than 0
-                  if (this.game.getTime() > 0) {
-                    this.scoreCollected+=1;
-                    this.scoreLabel.text = 'Score: ' + this.scoreCollected;
-                  }
-                },
-                loop: true // Repeat the timer indefinitely
-              });
-            
-        });
         
-        events.on('enemy-explode', () => {
+        events.on('green-50', () => {
+            this.scoreCollected+=50;
+            this.scoreLabel.text = 'Score: ' + this.scoreCollected;
+        });
+        events.on('red-100', () => {
             this.scoreCollected+=100;
             this.scoreLabel.text = 'Score: ' + this.scoreCollected;
-        })
+        });
+        events.on('blue-150', () => {
+            this.scoreCollected+=150;
+            this.scoreLabel.text = 'Score: ' + this.scoreCollected;
+        });
+
+
+       // LIVES 
+        
+        this.livesLabel = this.add.text(20, 18, 'Lives: 3', {
+            fontSize: '32px', color: 'yellow'
+        });
+        
+        
+        // lives left when collide with enemy 
+        events.on('collide-enemy', () => {
+                if(this.livesLeft>0){
+                    this.livesLeft --;
+                    this.livesLabel.text = 'Lives: ' + this.livesLeft;
+                }else{
+                    events.emit('gameover');
+                }    
+        });
+       
+
+        
+        
     }
 
     update() {
 
     }
+    
 
+    // creates a rounded rectangle
+    makeButton(x : number, y : number, w : number, h : number, objColor : number, curve: number){
+        const { width, height } = this.scale;
 
-    lifeUpdate(lives : number) {
-        var life1, life2, life3
-        if(lives >= 3) {
-            life3 = this.matter.add.image(130, 30, 'space', 'UI/playerLife1_blue.png')
-        } else{
-            life3.destroy()
-        }
-        if(lives >= 2) {
-            life2 = this.matter.add.image(80, 30, 'space', 'UI/playerLife1_blue.png')
-        } else{
-            life2.destroy()
-        }
-        if(lives >= 1) {
-            life1 = this.matter.add.image(30, 30, 'space', 'UI/playerLife1_blue.png')
-        } else{
-            life1.destroy()
-        }
-        
-        
+        var rect = new Phaser.Geom.Rectangle(x, y, w, h)
+        var button = this.add.graphics({fillStyle : {color : objColor}})
+        button.fillRoundedRect(rect.x, rect.y, rect.width, rect.height, curve)
+        return button
     }
-
-    // lifeClear(){
-    //     this.lifeBox.destroy(true)
-    // }
 }
