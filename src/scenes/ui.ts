@@ -12,8 +12,10 @@ export default class UI extends Phaser.Scene {
     private scoreLabel!: Phaser.GameObjects.Text;
     private scoreCollected: number = 0;
     private timeLabel!: Phaser.GameObjects.Text;
-    private lifeCounter!: [Phaser.GameObjects.Sprite];
+    private livesLabel!: Phaser.GameObjects.Text;
+    private livesLeft: number =3;
     graphics;
+    
 
     constructor() {
         super('ui');
@@ -46,7 +48,7 @@ export default class UI extends Phaser.Scene {
         this.add.rectangle(1600,500,20, 1000,0x3D405B)
 
 
-        this.lifeUpdate(3)
+        //this.lifeUpdate(3)
 
 
         this.powerupsLabel = this.add.text(1000, 18, 'PowerUps: 0', {
@@ -85,36 +87,30 @@ export default class UI extends Phaser.Scene {
         events.on('enemy-explode', () => {
             this.scoreCollected+=100;
             this.scoreLabel.text = 'Score: ' + this.scoreCollected;
-        })
+        });
+
+        this.livesLabel = this.add.text(500, 18, 'Lives: 3 ', {
+            fontSize: '32px', color: 'yellow'
+        });
+
+        events.on('collide-enemy', (time) => {
+            if(events.emit('collide-enemy')){
+                if(this.livesLeft>0){
+                    this.livesLeft --;
+                    this.livesLabel.text = 'Lives: ' + this.livesLeft;
+                }else{
+                    events.emit('gameover');
+                }
+
+            }  
+        });
+        
     }
 
     update() {
 
     }
+    
 
-
-    lifeUpdate(lives : number) {
-        var life1, life2, life3
-        if(lives >= 3) {
-            life3 = this.matter.add.image(130, 30, 'space', 'UI/playerLife1_blue.png')
-        } else{
-            life3.destroy()
-        }
-        if(lives >= 2) {
-            life2 = this.matter.add.image(80, 30, 'space', 'UI/playerLife1_blue.png')
-        } else{
-            life2.destroy()
-        }
-        if(lives >= 1) {
-            life1 = this.matter.add.image(30, 30, 'space', 'UI/playerLife1_blue.png')
-        } else{
-            life1.destroy()
-        }
-        
-        
-    }
-
-    // lifeClear(){
-    //     this.lifeBox.destroy(true)
-    // }
+    
 }
