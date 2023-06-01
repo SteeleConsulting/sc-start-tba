@@ -5,7 +5,6 @@ export default class Game extends Phaser.Scene {
 
 	private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
     private spaceship?: Phaser.Physics.Matter.Sprite;
-    // private spaceship2?: Phaser.Physics.Matter.Sprite;
     private bossShip? : Phaser.Physics.Matter.Sprite;
 
     private upgraded: boolean = false;
@@ -35,11 +34,9 @@ export default class Game extends Phaser.Scene {
     }
 
     preload(){
-        
         this.load.image('star', 'assets/star2.png');
         this.load.image('boss', 'assets/boss.png');
         this.load.atlas('explosion', 'assets/explosion.png', 'assets/explosion.json');
-
 
         //this loads a whole tileset, check assets/space-shooter/space-shooter-tileset.json for individual image names
         this.load.atlas('space', 'assets/space-shooter/space-shooter-tileset.png', 'assets/space-shooter/space-shooter-tileset.json');  
@@ -55,7 +52,6 @@ export default class Game extends Phaser.Scene {
     }
 
     create(){
-        
         const { width, height } = this.scale;  // width and height of the scene
 
         // Add random stars background

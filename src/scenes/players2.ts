@@ -9,6 +9,7 @@ export default class Players2 extends Phaser.Scene {
     private spaceship?: Phaser.Physics.Matter.Sprite;
     private spaceship2?: Phaser.Physics.Matter.Sprite;
     private upgraded: boolean = false;
+    private bossShip? : Phaser.Physics.Matter.Sprite;
 
     private speed = 5;
     private normalSpeed = 5;
@@ -27,8 +28,6 @@ export default class Players2 extends Phaser.Scene {
 
     init() {
 		this.cursors = this.input.keyboard.createCursorKeys();  // setup keyboard input
-        
-
         // load the other scenes
         // this.scene.launch('start');
         this.scene.launch('ui');
@@ -36,11 +35,9 @@ export default class Players2 extends Phaser.Scene {
     }
 
     preload(){
-        
         this.load.image('star', 'assets/star2.png');
         this.load.image('boss', 'assets/boss.png');
         this.load.atlas('explosion', 'assets/explosion.png', 'assets/explosion.json');
-
 
         //this loads a whole tileset, check assets/space-shooter/space-shooter-tileset.json for individual image names
         this.load.atlas('space', 'assets/space-shooter/space-shooter-tileset.png', 'assets/space-shooter/space-shooter-tileset.json');  
@@ -285,7 +282,6 @@ export default class Players2 extends Phaser.Scene {
                 
                 events.emit('enemy-explode');
                 
-
             }
 
         });
