@@ -96,6 +96,7 @@ export default class Game extends Phaser.Scene {
                             this.powerupSound.play();
                         }
                         if (spriteB?.getData('type') == 'enemy1' || spriteB?.getData('type') == 'enemy2' || spriteB?.getData('type') == 'enemy3') {
+                            events.emit('collide-enemy');
                             console.log('collided with enemy');
                            
                             this.explosionSound.play();
@@ -170,6 +171,7 @@ export default class Game extends Phaser.Scene {
         this.explosionSound = this.sound.add('explosion');
         this.laserSound = this.sound.add('laser'); 
         this.backgroundMusic = this.sound.add('pulsar');
+        events.emit('timeUpdated', this.time.now);
         
 
     }
@@ -188,7 +190,6 @@ export default class Game extends Phaser.Scene {
             this.spaceship.setY(this.spaceship.y - scrollDiff) // sync scroll speed with ship speed
         }
         // Emit the time event with the current time value,commented out ot prevent lag
-        //events.emit('timeUpdated', this.time.now);
 
 
         // Alternate control option (rotation)
@@ -311,6 +312,14 @@ export default class Game extends Phaser.Scene {
                 return;
             //detects all enemy types
             if (spriteA?.getData('type') == 'enemy1' || spriteA?.getData('type') == 'enemy2' || spriteA?.getData('type') == 'enemy3') {
+               if((spriteB?.getData('type') == 'enemy1')){
+                    events.emit('red-100');
+               }else if(spriteB?.getData('type') == 'enemy2'){
+                events.emit('green-50');
+
+               }else{
+                events.emit('blue-150');
+               }
                 console.log('laser collided with enemy');
                 spriteA.destroy();
                 spriteB.destroy();

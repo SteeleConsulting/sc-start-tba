@@ -86,12 +86,15 @@ export default class Players extends Phaser.Scene {
         }).setInteractive().on('pointerdown', () => (this.p1Game()))
 
         this.p2Button = this.add.graphics({fillStyle : {color : 0xE5E5E5}})
+        
         this.p2Button.fillRoundedRect(rect.x, rect.y * 2 + 20, rect.width, rect.height, 15)
         .setInteractive().on('pointerdown', () => (this.p2Game(), console.log('boxclicked')));
+        
 
         var p2Text = this.add.text(width / 3 + 60, height / 2 + 40, '2 PLAYERS', {
             fontFamily : 'Quicksand', fontSize: '80px', color : '#000000'
         }).setInteractive().on('pointerdown', () => (this.p2Game()))
+        
 
         
         var backRect = new Phaser.Geom.Rectangle(width * 5 / 6, height * 6 / 7, width / 8, height / 14 )
@@ -113,6 +116,7 @@ export default class Players extends Phaser.Scene {
 
     p2Game() {
         this.scene.start('game')
+        
     } // needs way to indicate 2 players
 
     goBack() {

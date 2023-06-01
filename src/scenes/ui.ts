@@ -12,8 +12,12 @@ export default class UI extends Phaser.Scene {
     private scoreLabel!: Phaser.GameObjects.Text;
     private scoreCollected: number = 0;
     private livesLabel!: Phaser.GameObjects.Text;
-    private livesLeft: number = 3;
+    private livesLeft: number = 0;
     //private timeLabel!: Phaser.GameObjects.Text;
+    private l1!: Phaser.GameObjects.Text;
+    private l1Left: number = 0;
+    private l2!: Phaser.GameObjects.Text;
+    private l2Left: number = 0;
     
     graphics;
     
@@ -69,29 +73,24 @@ export default class UI extends Phaser.Scene {
         
         // Listen to the 'timeUpdated' event
         
-        events.on('timeUpdated', (time) => {
-            this.time.addEvent({
-                delay: 1000, // every second
-                callback: () => {
-                  // Check if the time is greater than 0
-                  if (this.game.getTime() > 0) {
-                    this.scoreCollected+=1;
-                    this.scoreLabel.text = 'Score: ' + this.scoreCollected;
-                  }
-                },
-                loop: true // Repeat the timer indefinitely
-              });
-            
-        });
         
-        events.on('enemy-explode', () => {
+        events.on('green-50', () => {
+            this.scoreCollected+=50;
+            this.scoreLabel.text = 'Score: ' + this.scoreCollected;
+        });
+        events.on('red-100', () => {
             this.scoreCollected+=100;
             this.scoreLabel.text = 'Score: ' + this.scoreCollected;
         });
+        events.on('blue-150', () => {
+            this.scoreCollected+=150;
+            this.scoreLabel.text = 'Score: ' + this.scoreCollected;
+        });
+
 
        // LIVES 
         
-        this.livesLabel = this.add.text(20, 18, 'Lives: 3', {
+        this.livesLabel = this.add.text(20, 18, 'Lives: 0', {
             fontSize: '32px', color: 'yellow'
         });
         
@@ -103,9 +102,19 @@ export default class UI extends Phaser.Scene {
                     this.livesLabel.text = 'Lives: ' + this.livesLeft;
                 }else{
                     events.emit('gameover');
-                }
-              
+                }    
         });
+        events.on('two-players', () => {
+            this.l1 = this.add.text(20, 18, 'L1: 0', {
+                fontSize: '32px', color: 'yellow'
+            });
+            this.l2 = this.add.text(20, 18, 'L2: 0', {
+                fontSize: '32px', color: 'yellow'
+            });
+            
+
+        })
+
         
         
     }
