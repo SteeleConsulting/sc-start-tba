@@ -10,11 +10,13 @@ export default class Game extends Phaser.Scene {
 
     private upgraded: boolean = false;
     private bossHealth = 30;
+    private bossDirection = false;//false means left, true means right
     private speed = 5;
     private normalSpeed = 5;
     private turboSpeed = 10;
     private shootSpeed = -15;
     private scrollSpeed = -1;
+    private tickCounter = 0;
 
     private laserSound!: Phaser.Sound.BaseSound;
     private explosionSound!:  Phaser.Sound.BaseSound;
@@ -99,6 +101,13 @@ export default class Game extends Phaser.Scene {
                             console.log('collided with enemy');
                             this.explosionSound.play();
                         }
+                        if (spriteB == this.spaceship) {
+                            console.log('Collided with boss');
+                        }
+                        if (spriteB?.getData('type') == 'asteroid') {
+                            console.log('collided with asteroid');
+                            this.explosionSound.play();
+                        }
                         
                     });
 
@@ -146,18 +155,8 @@ export default class Game extends Phaser.Scene {
                         isSensor:true,
                         
                     });
-                    
                     this.bossShip.setDisplaySize(500,500);
-                    this.bossShip.setOnCollide((data: MatterJS.ICollisionPair) => {
-                        const spriteA = (data.bodyA as MatterJS.BodyType).gameObject as Phaser.Physics.Matter.Sprite
-                        const spriteB = (data.bodyB as MatterJS.BodyType).gameObject as Phaser.Physics.Matter.Sprite
-
-                        if (!spriteA?.getData || !spriteB?.getData)
-                            return;
-                        if (spriteA == this.spaceship) {
-                            console.log('Touched player');
-                        }
-                    });
+                    
                     break;
                 
             }
@@ -176,11 +175,58 @@ export default class Game extends Phaser.Scene {
         if (!this.spaceship?.active)   // This checks if the spaceship has been created yet
             return;
         
+        /*This does the boss health check, uncomment only when level repetition is complete
+        if(this.bossHealth <= 0){ //Checks to see if the boss is dead, if so, end level
+            this.bossShip?.destroy();
+            console.log('Level Complete!');
+            return;
+        }
+        */
+        //IF player reaches the boss section, it will run the boss phase and patterns
+        if(this.cameras.main.scrollY <= 0 && this.bossHealth > 0){
+            //console.log("You have reached the final boss section" , this.tickCounter);
+            if (!this.bossShip?.active)   // This checks if the bossShip has been created yet
+                this.bossHealth = 0;
+            //insert interval method for boss phase
+            else if(this.tickCounter == 50 || this.tickCounter == 150){
+                //console.log("Boss shoots triple laser");
+                this.createEnemyLaser(this.bossShip.x, this.bossShip.y + 250, -10, -this.turboSpeed, Math.PI);
+                this.createEnemyLaser(this.bossShip.x, this.bossShip.y + 250, 0, -this.turboSpeed, Math.PI);
+                this.createEnemyLaser(this.bossShip.x, this.bossShip.y + 250, 10, -this.turboSpeed, Math.PI);
+                this.tickCounter++;
+            }
+            else if(this.tickCounter == 100){
+                //console.log("Boss shoots quad laser");
+                this.createEnemyLaser(this.bossShip.x, this.bossShip.y + 250, -15, -this.turboSpeed, Math.PI);
+                this.createEnemyLaser(this.bossShip.x, this.bossShip.y + 250, -5, -this.turboSpeed, Math.PI);
+                this.createEnemyLaser(this.bossShip.x, this.bossShip.y + 250, 5, -this.turboSpeed, Math.PI);
+                this.createEnemyLaser(this.bossShip.x, this.bossShip.y + 250, 15, -this.turboSpeed, Math.PI);
+                this.tickCounter++;
+            }
+            else if(this.tickCounter == 200){
+                if(Math.floor(Math.random()*2) == 1){//summons left
+                    //console.log("Throw asteroid from left");
+                    this.throwAsteroid(0,Math.floor(Math.random())*500+550,20);
+                }
+                else{//summons right
+                    //console.log("Throw asteroid from right");
+                    this.throwAsteroid(1500,Math.floor(Math.random()*500)+550,-20);
+                }
+                this.tickCounter =0;
+            }
+            else{
+                this.tickCounter++;
+            }
+            if(this.bossShip?.active){
+                this.bossMovement(this.bossShip.x,((30-this.bossHealth)/3)*2);
+            }
+        }
+        
         // move camera up
         // this.cameras.main  //look here at how to adjust the camera view 
         if(this.cameras.main.scrollY >= 0){
             var scrollDiff = this.cameras.main.scrollY // var to track scroll movement for ship
-            this.cameras.main.scrollY = this.cameras.main.scrollY + this.scrollSpeed;
+            this.cameras.main.scrollY = this.cameras.main.scrollY + this.scrollSpeed*5;
             scrollDiff -= this.cameras.main.scrollY 
             //console.log(this.cameras.main.scrollY);//this is to debug the scroll
             this.spaceship.setY(this.spaceship.y - scrollDiff) // sync scroll speed with ship speed
@@ -318,6 +364,11 @@ export default class Game extends Phaser.Scene {
                 
 
             }
+            if(spriteA == this.bossShip ){
+                this.bossHealth--;
+                console.log("Boss health :",this.bossHealth );
+                spriteB.destroy();
+            }
 
         });
         
@@ -327,9 +378,11 @@ export default class Game extends Phaser.Scene {
 
     //Creates enemy lasers that hurt the player
     createEnemyLaser(x: number, y: number, xSpeed: number, ySpeed:number, radians:number = 0){
+        //console.log("enemy laser shot");
         var laser = this.matter.add.sprite(x, y, 'space', 'Lasers/laserRed08.png', { isSensor: true });
         this.upgraded;
         laser.setData('type', 'laser');
+        laser.setVelocityX(xSpeed);//add horizontal movement if wanted, for angle shots
         laser.setVelocityY(-ySpeed) // add laser vertical movement
         laser.setOnCollide((data: MatterJS.ICollisionPair) => {
             
@@ -345,18 +398,16 @@ export default class Game extends Phaser.Scene {
                 //spriteA.destroy();
                 spriteB.destroy();
                 this.explosionSound.play();
-                
-                events.emit('enemy-explode');
-                
-
+                //events.emit('enemy-explode');
             }
 
         });
         
         // destroy laser object after 500ms, otherwise lasers stay in memory and slow down the game
-        setTimeout((laser) => laser.destroy(), 1000, laser);   
+        setTimeout((laser) => laser.destroy(), 1500, laser);   
     }
-
+    
+    //Creates enemies to spawn on the map
     createEnemy(x:number,y:number){
         var chance = '';
         var result = Math.floor(Math.random()*3+1);
@@ -412,7 +463,29 @@ export default class Game extends Phaser.Scene {
         setTimeout((enemy, enemy1, enemy2, enemy3) => enemy.destroy(), 14000, enemy);
         
     }
+    //Throws asteroid in given spawn location and direction
+    throwAsteroid(spawnX:number,spawnY:number,speed:number){
+        var asteroid = this.matter.add.sprite(spawnX, spawnY, 'space', 'Meteors/meteorGrey_big3.png', { isSensor: true });
+        asteroid.setData('type','asteroid');
+        asteroid.setVelocityX(speed);
+        asteroid.setDisplaySize(200,200);
+        setTimeout((asteroid) => asteroid.destroy(), 3000, asteroid);
+    }   
 
+    //this will tell the boss which direction to move and how fast
+    bossMovement(x:number,xSpeed:number){
+        if (!this.bossShip?.active)   // This checks if the bossShip has been created yet
+                return;
+        //checks which dirrection to go to, false is left and true is right
+        if(x >= 1250)
+            this.bossDirection = false;
+        if(x <= 250)
+            this.bossDirection = true;
+        if(this.bossDirection)
+            this.bossShip.setVelocityX(xSpeed);
+        else
+            this.bossShip.setVelocityX(-xSpeed);
+    }
 
     private createSpaceshipAnimations(){
         this.anims.create({
