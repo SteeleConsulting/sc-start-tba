@@ -31,6 +31,8 @@ export default class Game extends Phaser.Scene {
         // load the other scenes
         // this.scene.launch('start');
         this.scene.launch('ui');
+        //this.scene.launch('ui2');
+
         this.scene.launch('gameover');
     }
 

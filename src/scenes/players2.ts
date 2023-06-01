@@ -30,7 +30,7 @@ export default class Players2 extends Phaser.Scene {
 		this.cursors = this.input.keyboard.createCursorKeys();  // setup keyboard input
         // load the other scenes
         // this.scene.launch('start');
-        this.scene.launch('ui');
+        this.scene.launch('ui2');
         this.scene.launch('gameover');
     }
 
@@ -162,6 +162,7 @@ export default class Players2 extends Phaser.Scene {
         this.explosionSound = this.sound.add('explosion');
         this.laserSound = this.sound.add('laser'); 
         this.backgroundMusic = this.sound.add('pulsar');
+        
         
     }
 
