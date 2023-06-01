@@ -18,6 +18,13 @@ export default class UI extends Phaser.Scene {
     graphics;
     
 
+
+
+    colorway = {
+        'border1' : 0x264653,
+        'border2' : 0x2A9D8F
+    }
+
     constructor() {
         super('ui');
     }
@@ -28,25 +35,24 @@ export default class UI extends Phaser.Scene {
     preload(){
         this.load.image('life', 'UI/playerLife1_blue.png');
         this.load.atlas('space', 'assets/space-shooter/space-shooter-tileset.png', 'assets/space-shooter/space-shooter-tileset.json');  
-        
-
     }
 
     create(){
 
+        const { width, height } = this.scale;
 
         
-        // add a text label to the screen
-        
-        this.add.rectangle(800,0,1600, 150,0x81B29A)
-        this.add.rectangle(800,1000,1600, 25,0x81B29A)
-        this.add.rectangle(0,500,25, 1000,0x81B29A)
-        this.add.rectangle(1600,500,25, 1000,0x81B29A)
+        // create UI border
+        this.makeButton(0, 0, width, 75, this.colorway['border1'], 0)
+        this.makeButton(0, 0, 30, height, this.colorway['border1'], 0)
+        this.makeButton(width, 0, -30, height,this.colorway['border1'],0)
+        this.makeButton(0, height,width, -30,this.colorway['border1'], 0)
 
-        this.add.rectangle(800,0,1600, 142,0x3D405B)
-        this.add.rectangle(800,1000,1600, 20,0x3D405B)
-        this.add.rectangle(0,500,20, 1000,0x3D405B)
-        this.add.rectangle(1600,500,20, 1000,0x3D405B)
+
+        this.makeButton(0, 0, width, 65, this.colorway['border2'], 0)
+        this.makeButton(0, 0, 20, height, this.colorway['border2'], 0)
+        this.makeButton(width, 0, -20, height,this.colorway['border2'],0)
+        this.makeButton(0, height,width, -20,this.colorway['border2'], 0)
 
 
 
@@ -111,5 +117,13 @@ export default class UI extends Phaser.Scene {
     }
     
 
-    
+    // creates a rounded rectangle
+    makeButton(x : number, y : number, w : number, h : number, objColor : number, curve: number){
+        const { width, height } = this.scale;
+
+        var rect = new Phaser.Geom.Rectangle(x, y, w, h)
+        var button = this.add.graphics({fillStyle : {color : objColor}})
+        button.fillRoundedRect(rect.x, rect.y, rect.width, rect.height, curve)
+        return button
+    }
 }
