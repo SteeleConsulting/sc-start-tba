@@ -1,5 +1,6 @@
 import Phaser from "phaser";
 import { sharedInstance as events } from "../helpers/eventCenter";
+import WebFontFile from "~/WebFontFile";
 
 export default class GameOver extends Phaser.Scene {
     constructor() {
@@ -10,13 +11,15 @@ export default class GameOver extends Phaser.Scene {
     }
 
     preload(){
-
+        const fonts = new WebFontFile(this.load, 'Quicksand')
+		this.load.addFile(fonts)
     }
 
     create(){
+        let {width, height} = this.scale
         events.on('gameover', () => {
-            this.add.text(0, 0, 'Game Over!', {
-                fontSize: '200px', color: 'white'
+            this.add.text(width / 2, height / 3, 'GAME OVER!', {
+                fontFamily : 'Quicksand', fontSize: '200px', color: 'white'
             });
         });
     }
