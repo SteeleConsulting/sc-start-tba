@@ -112,7 +112,7 @@ export default class Players extends Phaser.Scene {
     }
 
     p2Game() {
-        this.scene.start('game')
+        this.scene.start('players2')
     } // needs way to indicate 2 players
 
     goBack() {
