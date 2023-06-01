@@ -95,12 +95,7 @@ export default class Game extends Phaser.Scene {
                             console.log('collided with speedup');
                             this.powerupSound.play();
                         }
-                        if (spriteA?.getData('type') == 'enemy') {
-                            console.log('collided with enemy');
-                           
-                            this.explosionSound.play();  
-                        }
-                        if (spriteB?.getData('type') == 'enemy') {
+                        if (spriteB?.getData('type') == 'enemy1' || spriteB?.getData('type') == 'enemy2' || spriteB?.getData('type') == 'enemy3') {
                             console.log('collided with enemy');
                            
                             this.explosionSound.play();
@@ -147,17 +142,26 @@ export default class Game extends Phaser.Scene {
                     speedup.setBounce(1);
                     speedup.setData('type', 'speedup');
                     break;
-                /*
+                
                 case 'boss':
-                    this.bossShip = this.matter.add.sprite(x,y+700,'space','ufoYellow.png',{
+                    this.bossShip = this.matter.add.sprite(x+300,y-100,'space','ufoYellow.png',{
                         isSensor:true,
                         
                     });
                     
-                    this.bossShip.setDisplaySize(50,50);
-                    
+                    this.bossShip.setDisplaySize(500,500);
+                    this.bossShip.setOnCollide((data: MatterJS.ICollisionPair) => {
+                        const spriteA = (data.bodyA as MatterJS.BodyType).gameObject as Phaser.Physics.Matter.Sprite
+                        const spriteB = (data.bodyB as MatterJS.BodyType).gameObject as Phaser.Physics.Matter.Sprite
+
+                        if (!spriteA?.getData || !spriteB?.getData)
+                            return;
+                        if (spriteA == this.spaceship) {
+                            console.log('Touched player');
+                        }
+                    });
                     break;
-                */
+                
             }
         });
 
