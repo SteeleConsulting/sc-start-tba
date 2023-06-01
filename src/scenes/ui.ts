@@ -89,21 +89,27 @@ export default class UI extends Phaser.Scene {
             this.scoreLabel.text = 'Score: ' + this.scoreCollected;
         });
 
-        this.livesLabel = this.add.text(500, 18, 'Lives: 3 ', {
+       // LIVES 
+        
+        this.livesLabel = this.add.text(20, 18, 'Lives: 3', {
             fontSize: '32px', color: 'yellow'
         });
+        
+        
+        // lives left when collide with enemy 
+        events.on('collide-enemy', () => {
+            if(this.livesLeft>0){
+                this.livesLeft--;
+                this.livesLabel.text = 'Lives: ' + this.livesLeft;
 
-        events.on('collide-enemy', (time) => {
-            if(events.emit('collide-enemy')){
-                if(this.livesLeft>0){
-                    this.livesLeft --;
-                    this.livesLabel.text = 'Lives: ' + this.livesLeft;
-                }else{
-                    events.emit('gameover');
-                }
+            }else{
+                events.emit('gameover');
 
-            }  
+                
+            }
+            
         });
+        
         
     }
 
