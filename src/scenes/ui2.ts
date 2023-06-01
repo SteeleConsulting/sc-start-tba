@@ -10,9 +10,8 @@ export default class UI2 extends Phaser.Scene {
     private powerupsLabel!: Phaser.GameObjects.Text;
     private powerupsCollected: number = 0;
     private sc1!: Phaser.GameObjects.Text;
-    private sc2!: Phaser.GameObjects.Text;
-    private scoreCollected: number = 0;
-    private livesLeft: number = 0;
+    private sc1Collected: number = 0;
+    
     //private timeLabel!: Phaser.GameObjects.Text;
     private l1!: Phaser.GameObjects.Text;
     private l1Left: number = 0;
@@ -67,39 +66,35 @@ export default class UI2 extends Phaser.Scene {
             this.powerupsLabel.text = 'PowerUps: ' + this.powerupsCollected;
             
         })
+        // SCORE LABELS 
         this.sc1 = this.add.text(300, 18, 'SC1: 0', {
             fontSize: '32px', color: 'yellow'
         });
-        this.sc2 = this.add.text(600, 18, 'SC2: 0', {
-            fontSize: '32px', color: 'yellow'
-        });
+        
 
 
         
         // Listen to the 'timeUpdated' event
-        
+       // SCORE PLAYER 1
         
         events.on('green-50', () => {
-            this.scoreCollected+=50;
-            this.sc1.text = 'Score: ' + this.scoreCollected;
+            this.sc1Collected+=50;
+            this.sc1.text = 'Score: ' + this.sc1Collected;
         });
         events.on('red-100', () => {
-            this.scoreCollected+=100;
-            this.sc1.text = 'Score: ' + this.scoreCollected;
+            this.sc1Collected+=100;
+            this.sc1.text = 'Score: ' + this.sc1Collected;
         });
         events.on('blue-150', () => {
-            this.scoreCollected+=150;
-            this.sc1.text = 'Score: ' + this.scoreCollected;
+            this.sc1Collected+=150;
+            this.sc1.text = 'Score: ' + this.sc1Collected;
         });
+
+        
 
 
        // LIVES 
-       /*
-        
-        this.livesLabel = this.add.text(20, 18, 'Lives: 0', {
-            fontSize: '32px', color: 'yellow'
-        });
-        */
+      
         this.l1 = this.add.text(10, 18, 'L1: 0', {
             fontSize: '32px', color: 'yellow'
         });
@@ -108,28 +103,19 @@ export default class UI2 extends Phaser.Scene {
         });
 
         
-        /*
+        
         // lives left when collide with enemy 
+        // LIVES 1 
         events.on('collide-enemy', () => {
-                if(this.livesLeft>0){
-                    this.livesLeft --;
-                    this.livesLabel.text = 'Lives: ' + this.livesLeft;
+                if(this.l1Left>0){
+                    this.l2Left --;
+                    this.l1.text = 'L1: ' + this.l2Left;
                 }else{
                     events.emit('gameover');
                 }    
         });
-        */
-        events.on('two-players', () => {
-            this.l1 = this.add.text(20, 18, 'L1: 0', {
-                fontSize: '32px', color: 'yellow'
-            });
-            this.l2 = this.add.text(20, 18, 'L2: 0', {
-                fontSize: '32px', color: 'yellow'
-            });
-            
-
-        })
-
+        
+       
         
         
     }
