@@ -18,7 +18,7 @@ export default class GameOver extends Phaser.Scene {
     create(){
         let {width, height} = this.scale
         events.on('gameover', () => {
-            this.add.text(width / 2, height / 3, 'GAME OVER!', {
+            this.add.text(width / 2 - 600, height /  5, 'GAME OVER', {
                 fontFamily : 'Quicksand', fontSize: '200px', color: 'white'
             });
         });
