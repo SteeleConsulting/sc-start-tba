@@ -1,4 +1,4 @@
-import Phaser from "phaser";
+import Phaser, { Physics } from "phaser";
 import { sharedInstance as events } from "../helpers/eventCenter";
 //import { sharedInstance as events } from "../helpers/eventCenter";
 
@@ -11,6 +11,7 @@ export default class UI extends Phaser.Scene {
     private scoreCollected: number = 0;
     private timeLabel!: Phaser.GameObjects.Text;
     private lifeCounter!: [Phaser.GameObjects.Sprite];
+    graphics;
 
     constructor() {
         super('ui');
@@ -28,7 +29,11 @@ export default class UI extends Phaser.Scene {
     }
 
     create(){
+
+
+        
         // add a text label to the screen
+        
         this.add.rectangle(800,0,1600, 150,0x81B29A)
         this.add.rectangle(800,1000,1600, 25,0x81B29A)
         this.add.rectangle(0,500,25, 1000,0x81B29A)
@@ -41,6 +46,8 @@ export default class UI extends Phaser.Scene {
 
 
         this.lifeUpdate(3)
+        this.lifeUpdate(2)
+        this.lifeUpdate(0)
 
 
         this.powerupsLabel = this.add.text(1000, 18, 'PowerUps: 0', {
@@ -55,7 +62,7 @@ export default class UI extends Phaser.Scene {
             this.powerupsLabel.text = 'PowerUps: ' + this.powerupsCollected;
             
         })
-        this.scoreLabel = this.add.text(150, 18, 'Score: 0', {
+        this.scoreLabel = this.add.text(300, 18, 'Score: 0', {
             fontSize: '32px', color: 'yellow'
         });
         
@@ -87,9 +94,13 @@ export default class UI extends Phaser.Scene {
     }
 
     lifeUpdate(lives : number) {
-        for(let i = 0; i < lives; i++){
-            this.matter.add.sprite((30 * (i + 1) + 20), 35, 'space','UI/playerLife1_blue.png');
+        let life = [this.matter.add.image(50, 35, 'space','UI/playerLife1_blue.png')]
+        if(lives == 0) life[0].destroy
+        for(let i = 1; i < 3; i++){
+            if(i >= lives){ life[i].destroy() }
+            else {life[i] = this.matter.add.image(50 * (i + 1), 35, 'space','UI/playerLife1_blue.png')}
         }
+        
     }
     // lifeClear(lives : number){
     //     Phaser.GameObjects.Sprite.
