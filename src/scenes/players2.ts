@@ -78,7 +78,7 @@ export default class Players2 extends Phaser.Scene {
             switch(name){
                 case 'spawn':
                     this.cameras.main.scrollY = y-800;   // set camera to spaceship Y coordinates
-                    this.spaceship = this.matter.add.sprite(x + 533, y, 'space')
+                    this.spaceship = this.matter.add.sprite(x + 700, y, 'space')
                         .play('spaceship-idle');
                     this.spaceship.setCollisionGroup(1); 
                     this.spaceship.setCollidesWith(0); 
@@ -109,7 +109,7 @@ export default class Players2 extends Phaser.Scene {
                         
                     });
 
-                    this.spaceship2 = this.matter.add.sprite(x - 200, y, 'space')
+                    this.spaceship2 = this.matter.add.sprite(x, y, 'space')
                         .play('spaceship-idle2');
                     this.spaceship2.setCollisionGroup(2); 
                     this.spaceship2.setCollidesWith(0)
