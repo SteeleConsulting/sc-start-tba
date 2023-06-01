@@ -3,6 +3,8 @@ import { sharedInstance as events } from "../helpers/eventCenter";
 import WebFontFile from "~/WebFontFile";
 
 export default class StartScreen extends Phaser.Scene {
+    private backgroundMusic!: Phaser.Sound.BaseSound;
+    
     constructor() {
         super('start');
     }
@@ -16,6 +18,8 @@ export default class StartScreen extends Phaser.Scene {
     init() { }
 
     preload(){
+        this.load.audio('neon', ['assets/sounds/neon-sky.mp3']);
+
         const fonts = new WebFontFile(this.load, 'Quicksand')
 		this.load.addFile(fonts)
 
@@ -27,6 +31,8 @@ export default class StartScreen extends Phaser.Scene {
     }
 
     create() {
+        this.backgroundMusic = this.sound.add('neon');
+        this.backgroundMusic.play();
         const { width, height } = this.scale;
 
         var startRect = new Phaser.Geom.Rectangle(width / 2 - 255, height / 2 + 5, 500, 120)

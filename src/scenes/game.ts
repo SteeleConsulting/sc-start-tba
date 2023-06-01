@@ -48,7 +48,7 @@ export default class Game extends Phaser.Scene {
         this.load.audio('laser', ['assets/sounds/laser.wav']);
         this.load.audio('explosion', ['assets/sounds/explosion.mp3']);
         this.load.audio('powerup', ['assets/sounds/powerup.wav']);
-        this.load.audio('pulsar', ['assets/sounds/pulsar-office.mp3']);
+        this.load.audio('neon', ['assets/sounds/neon-sky.mp3']);
 
     }
 
@@ -85,13 +85,19 @@ export default class Game extends Phaser.Scene {
                         if (!spriteA?.getData || !spriteB?.getData)
                             return;
                         if (spriteA?.getData('type') == 'speedup') {
-                            console.log('collided with speedup');
-                            this.powerupSound.play();
+                            console.log('collided with speedup');    
                         }
                         if (spriteB?.getData('type') == 'speedup') {
                             console.log('collided with speedup');
+                            spriteB.destroy(); 
                             this.powerupSound.play();
                         }
+                        if( spriteB?.getData('type') == 'powerup') {
+                            console.log('collided with powerup');
+                            spriteB.destroy(); 
+                            this.powerupSound.play();
+                        } 
+
                         if (spriteA?.getData('type') == 'enemy') {
                             console.log('collided with enemy');
                             this.explosionSound.play();
@@ -103,14 +109,36 @@ export default class Game extends Phaser.Scene {
                         
                     });
                     break;
+                    
                 case 'speedup':
-                    const speedup = this.matter.add.sprite(x, y, 'space', 'Power-ups/bolt_gold.png', {
+                    const speedup = this.matter.add.sprite(x + 20, y, 'space', 'Power-ups/bolt_gold.png', {
                         isStatic: true,
                         isSensor: true
                     });
                     speedup.setBounce(1);
                     speedup.setData('type', 'speedup');
                     break;
+                
+                case 'powerup' : 
+                var result = Phaser.Math.Between(1,3);
+                    
+                switch(result){
+                case 3:
+                    const shield = this.matter.add.sprite(x, y, 'space', "Power-ups/shield_silver.png", {
+                        isStatic: true,
+                        isSensor: true
+                    });
+                    shield.setData('type', 'powerup');
+                    break;
+                case 1:
+                    const health = this.matter.add.sprite(x, y, 'space', 'Power-ups/pill_red.png', {
+                        isStatic: true,
+                        isSensor: true
+                    });
+                    health.setData('type', 'powerup');
+                    break; 
+                } 
+                break;  
                 /*
                 case 'boss':
                     this.bossShip = this.matter.add.sprite(x,y+700,'space','ufoYellow.png',{
@@ -129,7 +157,7 @@ export default class Game extends Phaser.Scene {
         this.powerupSound = this.sound.add('powerup');
         this.explosionSound = this.sound.add('explosion');
         this.laserSound = this.sound.add('laser'); 
-        this.backgroundMusic = this.sound.add('pulsar');
+        this.backgroundMusic = this.sound.add('neon');
         
 
     }
@@ -309,6 +337,12 @@ export default class Game extends Phaser.Scene {
         //Destroys enemy object, enemies can live off screen, there will be a 10 second time to delete enemies
         setTimeout((enemy, enemy1, enemy2, enemy3) => enemy.destroy(), 14000, enemy);
         
+    }
+
+    private createPowerupAnimations() { 
+        this.anims.create({ 
+            key: ''
+        })
     }
 
     private createSpaceshipAnimations(){
