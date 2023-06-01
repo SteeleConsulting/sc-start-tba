@@ -7,23 +7,19 @@ export default class Players extends Phaser.Scene {
         super('players');
     }
     
-    bg;
-    p1Button;
-    p2Button;
-    backButton;
 
     colorway = {
-        'bg' : 0x264653,
-        'p1Button1' : 0xF4A261,
-        'p1Button2' : 0xE76F51,
-        'p2Button1' : 0xF4A261,
-        'p2Button2' : 0xE76F51,        
-        'back1' : 0xF4A261,
-        'back2' : 0xE76F51,
-        'playersTitle' : 'E9C46A',
-        'p1Text' : '264653',
-        'p2Text' : '264653',
-        'backText' : '264653'
+        'bg' : 0x1D3557,
+        'p1Button1' : 0x457B9D,
+        'p1Button2' : 0xE63946,
+        'p2Button1' : 0x457B9D,
+        'p2Button2' : 0xE63946,        
+        'back1' : 0x457B9D,
+        'back2' : 0xE63946,
+        'playersTitle' : 'F1FAEE',
+        'p1Text' : 'F1FAEE',
+        'p2Text' : 'F1FAEE',
+        'backText' : 'F1FAEE'
     }
 
 
@@ -38,7 +34,7 @@ export default class Players extends Phaser.Scene {
         const { width, height } = this.scale;
 
         var bgRect = new Phaser.Geom.Rectangle(0, 0, width, height)
-        var bg = this.add.graphics({fillStyle: {color : 0x14213D } })
+        var bg = this.add.graphics({fillStyle: {color : this.colorway['bg'] } })
         bg.fillRoundedRect(bgRect.x, bgRect.y, bgRect.width, bgRect.height, 0);
 
     }
