@@ -9,6 +9,7 @@ export default class Game extends Phaser.Scene {
 
     private upgraded: boolean = false;
     private bossHealth = 30;
+    
     private speed = 5;
     private normalSpeed = 5;
     private turboSpeed = 10;
@@ -212,8 +213,7 @@ export default class Game extends Phaser.Scene {
                 spriteB.destroy();
                 this.explosionSound.play();
                 
-                events.emit('enemy-explode');
-                
+                events.emit('enemy-explode');  
 
             }
 
@@ -310,7 +310,6 @@ export default class Game extends Phaser.Scene {
         setTimeout((enemy, enemy1, enemy2, enemy3) => enemy.destroy(), 14000, enemy);
         
     }
-
 
     private createSpaceshipAnimations(){
         this.anims.create({

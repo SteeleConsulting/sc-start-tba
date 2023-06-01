@@ -240,8 +240,8 @@ export default class Players2 extends Phaser.Scene {
         }
 
         //create enemies on a random number check
-        if(Math.random()*100 >99.4 ){
-                this.createEnemy(Math.random()*1500,this.cameras.main.scrollY +90);
+        if(Math.random()*100 >99.4 && this.cameras.main.scrollY >= 0){
+            this.createEnemy(Math.random()*1500,this.cameras.main.scrollY +90);
         }
 
         //TODO: Add ability to hold down shift to attack continuously with a delay between shots
@@ -257,7 +257,6 @@ export default class Players2 extends Phaser.Scene {
         }
         
     }
-
 
     // create a laser sprite
     createLaser(x: number, y: number, xSpeed: number, ySpeed:number, radians:number = 0){
@@ -282,6 +281,37 @@ export default class Players2 extends Phaser.Scene {
                 
                 events.emit('enemy-explode');
                 
+            }
+
+        });
+        
+        // destroy laser object after 500ms, otherwise lasers stay in memory and slow down the game
+        setTimeout((laser) => laser.destroy(), 1000, laser);   
+    }
+    
+    //Creates enemy lasers that hurt the player
+    createEnemyLaser(x: number, y: number, xSpeed: number, ySpeed:number, radians:number = 0){
+        var laser = this.matter.add.sprite(x, y, 'space', 'Lasers/laserRed08.png', { isSensor: true });
+        this.upgraded;
+        laser.setData('type', 'laser');
+        laser.setVelocityY(-ySpeed) // add laser vertical movement
+        laser.setOnCollide((data: MatterJS.ICollisionPair) => {
+            
+            const spriteA = (data.bodyA as MatterJS.BodyType).gameObject as Phaser.Physics.Matter.Sprite
+            const spriteB = (data.bodyB as MatterJS.BodyType).gameObject as Phaser.Physics.Matter.Sprite
+            
+
+            if (!spriteA?.getData || !spriteB?.getData)
+                return;
+            //detects all enemy types
+            if (spriteA == this.spaceship ) {
+                console.log('enemy laser hit spaceship');
+                //spriteA.destroy();
+                spriteB.destroy();
+                this.explosionSound.play();
+                
+                events.emit('enemy-explode');
+
             }
 
         });
@@ -325,7 +355,21 @@ export default class Players2 extends Phaser.Scene {
         }
         //below is the behavior of the red emeies, shooting lasers at player
         else if(enemy.getData('type') == 'enemy1'){
+            this.createEnemyLaser(enemy.x, enemy.y - 50, 0, this.shootSpeed, Math.PI);
+            setTimeout((enemy) =>{
+            this.createEnemyLaser(enemy.x, enemy.y - 50, 0, this.shootSpeed, Math.PI),
+                setTimeout((enemy) =>
+                    this.createEnemyLaser(enemy.x, enemy.y - 50, 0, this.shootSpeed, Math.PI),
+                4000,enemy
+                );
+            },
+            4000,enemy
+            );
+        }
 
+        //below is the behavior of the green enemies, zoom forward
+        else{
+            enemy.setVelocityY(this.turboSpeed);
         }
 
         //Destroys enemy object, enemies can live off screen, there will be a 10 second time to delete enemies
@@ -344,7 +388,6 @@ export default class Players2 extends Phaser.Scene {
             key: 'spaceship-idle2',
             frames: [{key:'space', frame: 'playerShip1_red.png'}]
         });
-
 
         this.anims.create({
             key: 'spaceship-explode',
@@ -379,11 +422,12 @@ export default class Players2 extends Phaser.Scene {
     }
     getTime() {
         return this.sys.game.getTime();
+        /*
         const currentTime = this.getTime();
         if(currentTime >0){
           key:'scoreCollected'
         }
         //console.log(currentTime);
-        
+        */
     }
 }
