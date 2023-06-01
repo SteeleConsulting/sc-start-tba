@@ -32,7 +32,7 @@ export default class Players extends Phaser.Scene {
 
     preload(){
 
-        const fonts = new WebFontFile(this.load, 'Quicksand')
+        const fonts = new WebFontFile(this.load, 'Righteous')
 		this.load.addFile(fonts)
 
         const { width, height } = this.scale;
@@ -48,7 +48,7 @@ export default class Players extends Phaser.Scene {
 
         // page title
         this.add.text(width / 6, height / 5, 'SELECT NUMBER OF PLAYERS', {
-            fontFamily : 'Quicksand', fontSize: '80px', color : '#' + this.colorway['playersTitle']
+            fontFamily : 'Righteous', fontSize: '80px', color : '#' + this.colorway['playersTitle']
         })
         
         // 1 player game button
@@ -56,7 +56,7 @@ export default class Players extends Phaser.Scene {
         this.makeButton(width / 3 + 10, height / 4 + 115, width / 3, height / 8, this.colorway['p1Button2'], 15)
 
         this.add.text(width / 3 + 100, height / 4 + 135, '1 PLAYER', {
-            fontFamily : 'Quicksand', fontSize: '80px', color : '#' + this.colorway['p1Text']
+            fontFamily : 'Righteous', fontSize: '80px', color : '#' + this.colorway['p1Text']
         }).setInteractive().on('pointerdown', () => (this.p1Game()))
 
         // 2 player game button
@@ -64,7 +64,7 @@ export default class Players extends Phaser.Scene {
         this.makeButton(width / 3 + 10, height  / 2 + 135, width / 3, height / 8, this.colorway['p2Button2'], 15)
 
         var p2Text = this.add.text(width / 3 + 65, height / 2 + 155, '2 PLAYERS', {
-            fontFamily : 'Quicksand', fontSize: '80px', color : this.colorway['p2Text']
+            fontFamily : 'Righteous', fontSize: '80px', color : this.colorway['p2Text']
         }).setInteractive().on('pointerdown', () => (this.p2Game()))
         
         // back button
@@ -72,7 +72,7 @@ export default class Players extends Phaser.Scene {
         this.makeButton(width * 5 / 6 + 10, height * 6 / 7 + 5, width / 8, height / 14, this.colorway['back2'], 15)
 
         this.add.text(width * 5 / 6 + 45, height * 6 / 7 + 15, 'BACK', {
-            fontFamily : 'Quicksand', fontSize : '40px', color : '#' + this.colorway['backText']
+            fontFamily : 'Righteous', fontSize : '40px', color : '#' + this.colorway['backText']
         }).setInteractive().on('pointerdown', () => (this.backButton()))
     }
 

@@ -14,8 +14,8 @@ export default class UI extends Phaser.Scene {
 
 
     colorway = {
-        'border1' : 0x264653,
-        'border2' : 0x2A9D8F
+        'border1' : 0x1D3557,
+        'border2' : 0x457B9D 
     }
 
     constructor() {
