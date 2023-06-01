@@ -14,7 +14,7 @@ export default class UI2 extends Phaser.Scene {
     
     //private timeLabel!: Phaser.GameObjects.Text;
     private l1!: Phaser.GameObjects.Text;
-    private l1Left: number = 0;
+    private l1Left: number = 1;
     private l2!: Phaser.GameObjects.Text;
     private l2Left: number = 0;
     
@@ -95,12 +95,14 @@ export default class UI2 extends Phaser.Scene {
 
        // LIVES 
       
-        this.l1 = this.add.text(10, 18, 'L1: 0', {
+        this.l1 = this.add.text(10, 18, 'L1: 1', {
             fontSize: '32px', color: 'yellow'
         });
+        /*
         this.l2 = this.add.text(150, 18, 'L2: 0', {
             fontSize: '32px', color: 'yellow'
         });
+        */
 
         
         
@@ -108,8 +110,8 @@ export default class UI2 extends Phaser.Scene {
         // LIVES 1 
         events.on('collide-enemy', () => {
                 if(this.l1Left>0){
-                    this.l2Left --;
-                    this.l1.text = 'L1: ' + this.l2Left;
+                    this.l1Left --;
+                    this.l1.text = 'L1: ' + this.l1Left;
                 }else{
                     events.emit('gameover');
                 }    

@@ -12,12 +12,8 @@ export default class UI extends Phaser.Scene {
     private scoreLabel!: Phaser.GameObjects.Text;
     private scoreCollected: number = 0;
     private livesLabel!: Phaser.GameObjects.Text;
-    private livesLeft: number = 0;
-    //private timeLabel!: Phaser.GameObjects.Text;
-    private l1!: Phaser.GameObjects.Text;
-    private l1Left: number = 0;
-    private l2!: Phaser.GameObjects.Text;
-    private l2Left: number = 0;
+    private livesLeft: number = 3;
+    
     
     graphics;
     
@@ -90,7 +86,7 @@ export default class UI extends Phaser.Scene {
 
        // LIVES 
         
-        this.livesLabel = this.add.text(20, 18, 'Lives: 0', {
+        this.livesLabel = this.add.text(20, 18, 'Lives: 3', {
             fontSize: '32px', color: 'yellow'
         });
         
@@ -104,16 +100,7 @@ export default class UI extends Phaser.Scene {
                     events.emit('gameover');
                 }    
         });
-        events.on('two-players', () => {
-            this.l1 = this.add.text(20, 18, 'L1: 0', {
-                fontSize: '32px', color: 'yellow'
-            });
-            this.l2 = this.add.text(20, 18, 'L2: 0', {
-                fontSize: '32px', color: 'yellow'
-            });
-            
-
-        })
+       
 
         
         

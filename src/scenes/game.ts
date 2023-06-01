@@ -219,12 +219,13 @@ export default class Game extends Phaser.Scene {
                 return;
             //detects all enemy types
             if (spriteA?.getData('type') == 'enemy1' || spriteA?.getData('type') == 'enemy2' || spriteA?.getData('type') == 'enemy3') {
-               if((spriteB?.getData('type') == 'enemy1')){
+               if((spriteA?.getData('type') == 'enemy1')){
                     events.emit('red-100');
-               }else if(spriteB?.getData('type') == 'enemy2'){
+               }
+               if(spriteA?.getData('type') == 'enemy2'){
                 events.emit('green-50');
 
-               }else{
+               }if(spriteA?.getData('type') == 'enemy3'){
                 events.emit('blue-150');
                }
                 console.log('laser collided with enemy');
