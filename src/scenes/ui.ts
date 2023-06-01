@@ -2,7 +2,7 @@
 // Most updated at 8:57
 import Phaser, { NONE, Physics } from "phaser";
 import { sharedInstance as events } from "../helpers/eventCenter";
-//import { sharedInstance as events } from "../helpers/eventCenter";
+
 
 
 export default class UI extends Phaser.Scene {
@@ -11,9 +11,10 @@ export default class UI extends Phaser.Scene {
     private powerupsCollected: number = 0;
     private scoreLabel!: Phaser.GameObjects.Text;
     private scoreCollected: number = 0;
-    private timeLabel!: Phaser.GameObjects.Text;
     private livesLabel!: Phaser.GameObjects.Text;
-    private livesLeft: number =3;
+    private livesLeft: number = 3;
+    //private timeLabel!: Phaser.GameObjects.Text;
+    
     graphics;
     
 
@@ -48,7 +49,6 @@ export default class UI extends Phaser.Scene {
         this.add.rectangle(1600,500,20, 1000,0x3D405B)
 
 
-        //this.lifeUpdate(3)
 
 
         this.powerupsLabel = this.add.text(1000, 18, 'PowerUps: 0', {
@@ -98,16 +98,13 @@ export default class UI extends Phaser.Scene {
         
         // lives left when collide with enemy 
         events.on('collide-enemy', () => {
-            if(this.livesLeft>0){
-                this.livesLeft--;
-                this.livesLabel.text = 'Lives: ' + this.livesLeft;
-
-            }else{
-                events.emit('gameover');
-
-                
-            }
-            
+                if(this.livesLeft>0){
+                    this.livesLeft --;
+                    this.livesLabel.text = 'Lives: ' + this.livesLeft;
+                }else{
+                    events.emit('gameover');
+                }
+              
         });
         
         

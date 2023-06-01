@@ -95,13 +95,14 @@ export default class Game extends Phaser.Scene {
                         }
                         if (spriteA?.getData('type') == 'enemy') {
                             console.log('collided with enemy');
-                            this.explosionSound.play();
-                            events.emit('collide-enemy');
+                           
+                            this.explosionSound.play();  
                         }
                         if (spriteB?.getData('type') == 'enemy') {
                             console.log('collided with enemy');
+                           
                             this.explosionSound.play();
-                            events.emit('collide-enemy');
+                            
                         }
                         
                     });
