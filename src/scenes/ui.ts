@@ -44,6 +44,8 @@ export default class UI extends Phaser.Scene {
 
     init() {
         this.cursors = this.input.keyboard.createCursorKeys();
+
+        //this.scene.launch('gameover');
     }
 
     preload() {
@@ -128,9 +130,8 @@ export default class UI extends Phaser.Scene {
                 this.livesLabel.text = 'Lives: ' + this.livesLeft;
 
             } else if (this.livesLeft <= 0 && this.endTrigger == false) {
+                this.endTrigger = true
                 this.getGameover()
-
-
             }
         });
         //increases life
@@ -214,8 +215,8 @@ export default class UI extends Phaser.Scene {
     }
 
     getGameover() {
-        this.endTrigger = false
         this.livesLeft = 3
-        this.scene.start('gameover')
+        this.endTrigger = false
+        this.scene.launch('gameover')
     }
 }

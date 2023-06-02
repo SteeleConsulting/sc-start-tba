@@ -43,8 +43,8 @@ export default class Game2PHard extends Phaser.Scene {
         this.cursors = this.input.keyboard.createCursorKeys();  // setup keyboard input
         // load the other scenes
         // this.scene.launch('start');
+        // this.scene.launch('gameover');
         this.scene.launch('ui2');
-        this.scene.launch('gameover');
     }
 
     preload() {

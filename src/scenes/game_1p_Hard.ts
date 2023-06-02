@@ -37,8 +37,8 @@ export default class Game1PHard extends Phaser.Scene {
         // load the other scenes
         // this.scene.launch('start');
         //this.scene.launch('ui2');
+        // this.scene.launch('gameover');
         this.scene.launch('ui');
-        this.scene.launch('gameover');
     }
 
     preload() {

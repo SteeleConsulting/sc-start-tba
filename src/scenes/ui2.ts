@@ -45,6 +45,8 @@ export default class UI2 extends Phaser.Scene {
 
     init() {
         this.cursors = this.input.keyboard.createCursorKeys();
+
+        this.scene.launch('gameover');
     }
 
     preload() {
@@ -142,6 +144,7 @@ export default class UI2 extends Phaser.Scene {
                 this.livesLeft--;
                 this.lives.text = 'L1: ' + this.livesLeft;
             } else if (this.livesLeft <= 0 && this.endTrigger == false) {
+                this.endTrigger = true
                 this.getGameover()
             }
         });
@@ -217,9 +220,9 @@ export default class UI2 extends Phaser.Scene {
     }
 
     getGameover() {
-        this.endTrigger = false
         this.livesLeft = 3
-        this.scene.start('gameover')
+        this.endTrigger = false
+        this.scene.launch('gameover')
     }
 
 }
