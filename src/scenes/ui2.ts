@@ -153,7 +153,7 @@ export default class UI2 extends Phaser.Scene {
     update() {
         const pJustPressed = Phaser.Input.Keyboard.JustDown(this.keys.P);
         const escJustPressed = Phaser.Input.Keyboard.JustDown(this.keys.ESC);
-        if(!this.scene.isPaused('game') && (this.keys.P.isDown || this.keys.ESC.isDown) && !(pJustPressed || escJustPressed)){
+        if(!(this.scene.isPaused('game_2p_easy') || this.scene.isPaused('game_2p_Hard')) && (this.keys.P.isDown || this.keys.ESC.isDown) && !(pJustPressed || escJustPressed)){
             this.pauseGame()
         } 
     }

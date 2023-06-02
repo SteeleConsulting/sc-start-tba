@@ -2,9 +2,9 @@ import Phaser from "phaser";
 import { sharedInstance as events } from "../helpers/eventCenter";
 import WebFontFile from "~/WebFontFile";
 
-export default class Levels extends Phaser.Scene {
+export default class Levels2 extends Phaser.Scene {
     constructor() {
-        super('levels');
+        super('levels2');
     }
     
     bg;
@@ -14,16 +14,16 @@ export default class Levels extends Phaser.Scene {
 
     colorway = {
         'bg' : 0x1D3557,
-        'l1Button1' : 0xF4A261,
-        'l1Button2' : 0xE76F51,
-        'l2Button1' : 0xF4A261,
-        'l2Button2' : 0xE76F51,        
-        'back1' : 0xF4A261,
-        'back2' : 0xE76F51,
-        'levelTitle' : 'E9C46A',
-        'l1Text' : '264653',
-        'l2Text' : '264653',
-        'backText' : '264653'
+        'l1Button1' : 0x457B9D,
+        'l1Button2' : 0xE63946,
+        'l2Button1' : 0x457B9D,
+        'l2Button2' : 0xE63946,        
+        'back1' : 0x457B9D,
+        'back2' : 0xE63946,
+        'levelTitle' : 'F1FAEE',
+        'l1Text' : 'F1FAEE',
+        'l2Text' : 'F1FAEE',
+        'backText' : 'F1FAEE'
     }
 
 
@@ -33,7 +33,7 @@ export default class Levels extends Phaser.Scene {
     preload(){
         console.log('went into levels');
 
-        const fonts = new WebFontFile(this.load, 'Quicksand')
+        const fonts = new WebFontFile(this.load, 'Righteous')
 		this.load.addFile(fonts)
 
         const { width, height } = this.scale;
@@ -49,7 +49,7 @@ export default class Levels extends Phaser.Scene {
 
         // page title
         this.add.text(width / 6, height / 5, 'SELECT LEVEL', {
-            fontFamily : 'Quicksand', fontSize: '80px', color : '#' + this.colorway['levelTitle']
+            fontFamily : 'Righteous', fontSize: '80px', color : '#' + this.colorway['levelTitle']
         })
         
         // 1 Level game button
@@ -57,15 +57,15 @@ export default class Levels extends Phaser.Scene {
         this.makeButton(width / 3 + 10, height / 4 + 115, width / 3, height / 8, this.colorway['l1Button2'], 15)
 
         this.add.text(width / 3 + 100, height / 4 + 135, 'Level 1 ', {
-            fontFamily : 'Quicksand', fontSize: '80px', color : '#' + this.colorway['l1Text']
+            fontFamily : 'Righteous', fontSize: '80px', color : '#' + this.colorway['l1Text']
         }).setInteractive().on('pointerdown', () => (this.l1Game()))
 
         // 2 level game button
-        this.makeButton(width / 3, height  / 2 + 130, width / 3, height / 8, this.colorway['p2Button1'], 15)
-        this.makeButton(width / 3 + 10, height  / 2 + 135, width / 3, height / 8, this.colorway['p2Button2'], 15)
+        this.makeButton(width / 3, height  / 2 + 130, width / 3, height / 8, this.colorway['l2Button1'], 15)
+        this.makeButton(width / 3 + 10, height  / 2 + 135, width / 3, height / 8, this.colorway['l2Button2'], 15)
 
         var p2Text = this.add.text(width / 3 + 65, height / 2 + 155, 'Level 2', {
-            fontFamily : 'Quicksand', fontSize: '80px', color : this.colorway['l2Text']
+            fontFamily : 'Righteous', fontSize: '80px', color : this.colorway['l2Text']
         }).setInteractive().on('pointerdown', () => (this.l2Game()))
         
         // back button
@@ -73,7 +73,7 @@ export default class Levels extends Phaser.Scene {
         this.makeButton(width * 5 / 6 + 10, height * 6 / 7 + 5, width / 8, height / 14, this.colorway['back2'], 15)
 
         this.add.text(width * 5 / 6 + 45, height * 6 / 7 + 15, 'BACK', {
-            fontFamily : 'Quicksand', fontSize : '40px', color : '#' + this.colorway['backText']
+            fontFamily : 'Righteous', fontSize : '40px', color : '#' + this.colorway['backText']
         }).setInteractive().on('pointerdown', () => (this.backButton()))
     }
 
@@ -92,13 +92,13 @@ export default class Levels extends Phaser.Scene {
     }
 
     l1Game() {
-        this.scene.start('players')
+        this.scene.start('game_2p_easy')
     }
     l2Game() {
-        this.scene.start('players')
+        this.scene.start('games_2p_hard')
     }
    
     goBack() {
-        this.scene.start('StartScreen')
+        this.scene.start('start')
     }
 }

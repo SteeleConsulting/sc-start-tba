@@ -1,8 +1,6 @@
 import Phaser from "phaser";
 import { sharedInstance as events, sharedInstance } from "../helpers/eventCenter";
 import WebFontFile from "~/WebFontFile";
-import GameOver from "./gameover";
-import Players from "./players";
 
 export default class StartScreen extends Phaser.Scene {
     private backgroundMusic!: Phaser.Sound.BaseSound;
@@ -107,7 +105,7 @@ export default class StartScreen extends Phaser.Scene {
 
     // changes to levels screen
     selectPlayers(){
-        this.scene.start('players');
+        this.scene.start('player_select');
     }
 
     // create credit text box

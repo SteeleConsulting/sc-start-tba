@@ -52,6 +52,8 @@ export default class GameOver extends Phaser.Scene{
         this.add.text(width * 4 / 12 + 30, height * 4 / 6 + 25, 'BACK TO START', {
             fontFamily : 'Righteous', fontSize : '60px', color : '#' + this.colorway['restartText']
         }).setInteractive().on('pointerdown', () => (this.backToStart()))
+    
+    
     }
 
     update() {
@@ -67,8 +69,17 @@ export default class GameOver extends Phaser.Scene{
         return button
     }
 
+
     restartStage(){
-        this.scene.start('game')
+        if(this.scene.isActive('game_1p_easy')){
+            this.scene.start('game_1p_easy')
+        } else if(this.scene.isActive('game_1p_hard')){
+            this.scene.start('game_1p_hard')
+        } else if(this.scene.isActive('game_2p_easy')){
+            this.scene.start('game_2p_easy')
+        } else if(this.scene.isActive('game_2p_hard')){
+            this.scene.start('game_2p_hard')
+        }
     }
 
     backToStart(){
