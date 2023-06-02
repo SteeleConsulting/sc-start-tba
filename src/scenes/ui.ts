@@ -126,7 +126,6 @@ export default class UI extends Phaser.Scene {
                     this.livesLabel.text = 'Lives: ' + this.livesLeft;
 
                 }else{
-
                     console.log('went into game over');
                     this.scene.start('gameover')
                     
@@ -137,17 +136,7 @@ export default class UI extends Phaser.Scene {
             this.livesLeft++;
             this.livesLabel.text = 'Lives: ' + this.livesLeft;
         });
-        /*
-        events.on('gameover', () => {
-            console.log('gameover')
-            this.add.text(width / 6 - 10, height / 5, 'GAME OVER', {
-                fontFamily : 'Righteous', fontSize: '190px', color: 'white'
-            });
-        });
-        */
-       
-
-        
+            
         
     }
 
