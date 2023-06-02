@@ -178,7 +178,10 @@ export default class UI2 extends Phaser.Scene {
         pauseGame(){
             const {width, height} = this.scale
             var pauseMenu = this.add.group()
-            this.scene.pause('players2')
+            
+            this.scene.pause('1p_easy').pause('1p_hard')
+            .pause('2p_easy').pause('2p_hard')
+
             pauseMenu.add(this.makeButton(width * 3 / 8 - 20, height * 3 / 7 + 45, 500, 120, this.colorway['restart2'], 15))
             pauseMenu.add(this.makeButton(width * 3 / 8 - 10, height * 3 / 7 + 50, 500, 120, this.colorway['restart1'], 15))
     
@@ -203,21 +206,14 @@ export default class UI2 extends Phaser.Scene {
         hidePauseMenu(pauseMenu) {
             console.log('hide');
             pauseMenu.destroy(true)       
-            if(this.scene.isActive('1p_easy')){
-                this.scene.run('1p_easy')
-            } else if(this.scene.isActive('1p_hard')){
-                this.scene.run('1p_hard')
-            } else if(this.scene.isActive('2p_easy')){
-                this.scene.run('2p_easy')
-            } else if(this.scene.isActive('2p_hard')){
-                this.scene.run('2p_hard')
-            }
+            this.scene.resume('1p_easy').resume('1p_hard')
+            .resume('2p_easy').resume('2p_hard')
         }
     
         returnStart(pauseMenu){
-            pauseMenu.destroy()
-            this.scene.stop('players2')
-            this.scene.start('start')
+            pauseMenu.destroy(true)
+            this.scene.stop('1p_easy').stop('2p_easy')
+            .stop('1p_hard').stop('2p_hard').start('start')
         }
 
     

@@ -72,18 +72,29 @@ export default class GameOver extends Phaser.Scene{
 
 
     restartStage(){
-        if(this.scene.isActive('game_1p_easy')){
-            this.scene.start('game_1p_easy')
-        } else if(this.scene.isActive('game_1p_hard')){
-            this.scene.start('game_1p_hard')
-        } else if(this.scene.isActive('game_2p_easy')){
-            this.scene.start('game_2p_easy')
-        } else if(this.scene.isActive('game_2p_hard')){
-            this.scene.start('game_2p_hard')
+
+        this.scene.stop('1p_easy').stop('1p_hard').stop('2p_easy')
+        .stop('2p_hard').stop('1p_easy')
+        
+        if(this.scene.isActive('1p_easy')){
+            this.scene.start('1p_easy')
+
+        } else if(this.scene.isActive('1p_hard')){
+            this.scene.start('1p_hard')
+
+        } else if(this.scene.isActive('2p_easy')){
+            this.scene.start('2p_easy')
+
+        } else if(this.scene.isActive('2p_hard')){
+            this.scene.start('2p_hard')
+
+        } else{
+            this.scene.start('start')
         }
     }
 
     backToStart(){
-        this.scene.start('start')
+        this.scene.stop('1p_easy').stop('2p_easy')
+        .stop('1p_hard').stop('2p_hard').start('start')
     }
 }

@@ -1,19 +1,27 @@
 import Phaser, { Data } from "phaser";
 import { sharedInstance as events } from "../helpers/eventCenter";    // this is the shared events emitter
 
-export default class Game1PHard extends Phaser.Scene {
+export default class Game2PHard extends Phaser.Scene {
 
     private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
+    private keys;
+
+    private spaceshipShield1 = 0;//how much shield ship has
+    private shieldVis1?: Phaser.Physics.Matter.Sprite;//display for shield
+    private spaceshipZoom1 = 1;//stackable speed power up
+
+    private spaceshipShield2 = 0;//how much shield ship has
+    private shieldVis2?: Phaser.Physics.Matter.Sprite;//display for shield
+    private spaceshipZoom2 = 1;//stackable speed power up
+
     private spaceship?: Phaser.Physics.Matter.Sprite;
+    private spaceship2?: Phaser.Physics.Matter.Sprite;
     private bossShip?: Phaser.Physics.Matter.Sprite;
 
-    private spaceshipShield = 0;//how much shield ship has
-    private shieldVis?:Phaser.Physics.Matter.Sprite;//display for shield
-    private spaceshipZoom = 1;//stackable speed power up
+    private bossHealth = 50;
+    private bossDirection = false;//false means left, true means right
 
     private upgraded: boolean = false;
-    private bossHealth = 50;//Hard Difficulty change: Boss now has 50 health
-    private bossDirection = false;//false means left, true means right
 
     private speed = 5;
     private normalSpeed = 5;
@@ -28,16 +36,14 @@ export default class Game1PHard extends Phaser.Scene {
     private backgroundMusic!: Phaser.Sound.BaseSound;
 
     constructor() {
-        super('1p_hard');
+        super('2p_hard');
     }
 
     init() {
         this.cursors = this.input.keyboard.createCursorKeys();  // setup keyboard input
-
         // load the other scenes
         // this.scene.launch('start');
-        //this.scene.launch('ui2');
-        this.scene.launch('ui');
+        this.scene.launch('ui2');
         this.scene.launch('gameover');
     }
 
@@ -55,11 +61,12 @@ export default class Game1PHard extends Phaser.Scene {
         this.load.audio('laser', ['assets/sounds/laser.wav']);
         this.load.audio('explosion', ['assets/sounds/explosion.mp3']);
         this.load.audio('powerup', ['assets/sounds/powerup.wav']);
-        this.load.audio('neon', ['assets/sounds/neon-sky.mp3']);
+        this.load.audio('pulsar', ['assets/sounds/pulsar-office.mp3']);
 
     }
 
     create() {
+        this.keys = this.input.keyboard.addKeys('A,W,S,D');
         const { width, height } = this.scale;  // width and height of the scene
 
         // Add random stars background
@@ -81,13 +88,29 @@ export default class Game1PHard extends Phaser.Scene {
             switch (name) {
                 case 'spawn':
                     this.cameras.main.scrollY = y - 800;   // set camera to spaceship Y coordinates
-                    this.spaceship = this.matter.add.sprite(x, y, 'space')
+                    this.spaceship = this.matter.add.sprite(x + 700, y, 'space')
                         .play('spaceship-idle');
+
                     //makes invisible shield, will only appear if there is a shield
-                    this.shieldVis = this.matter.add.sprite(x,y,'space','Effects/shield1.png');
-                    this.shieldVis.visible = false;
-                    this.shieldVis.setCollisionGroup(1); 
-                    this.shieldVis.setCollidesWith(0);
+                    this.shieldVis1 = this.matter.add.sprite(x, y, 'space', 'Effects/shield1.png');
+                    this.shieldVis1.visible = false;
+                    this.shieldVis1.setCollisionGroup(1);
+                    this.shieldVis1.setCollidesWith(0);
+
+                    // This was for to prevent from players colliding
+                    /*
+                    this.spaceship.setCollisionGroup(1); 
+                    this.spaceship.setCollidesWith(0); 
+                    
+                    this.spaceship.setCollisionGroup(1); 
+                    this.spaceship.setCollidesWith(3); 
+
+                    this.spaceship2.setCollisionGroup(2); 
+                    this.spaceship2.setCollidesWith(0)
+                
+                    this.spaceship2.setCollisionGroup(2); 
+                    this.spaceship2.setCollidesWith(3)
+                    */
 
                     // configure collision detection
                     this.spaceship.setOnCollide((data: MatterJS.ICollisionPair) => {
@@ -96,20 +119,25 @@ export default class Game1PHard extends Phaser.Scene {
 
                         if (!spriteA?.getData || !spriteB?.getData)
                             return;
+                        if (spriteA?.getData('type') == 'speedup') {
+                            console.log('collided with speedup');
+                            this.powerupSound.play();
+                        }
+                        // Where powerup is collided with spaceship
                         if (spriteB?.getData('type') == 'speedup') {
-                            this.spaceshipZoom++;
-                            console.log('Speed up! Speed is: ',this.spaceshipZoom);
+                            this.spaceshipZoom1++;
+                            console.log('Speed up! Speed is: ', this.spaceshipZoom1);
                             spriteB.destroy();
-                            setTimeout(() => {this.spaceshipZoom=1,console.log('Speed reverted')}, 5000);
-                            
+                            setTimeout(() => { this.spaceshipZoom1 = 1, console.log('Speed reverted') }, 5000);
+
                             this.powerupSound.play();
                         }
                         if (spriteB?.getData('type') == 'shield') {
-                            if(!this.shieldVis?.active)
+                            if (!this.shieldVis1?.active)
                                 return;
-                            this.spaceshipShield++;
-                            this.shieldVis.visible = true;
-                            console.log('Shield health increase! Shield power: ', this.spaceshipShield);
+                            this.spaceshipShield1++;
+                            this.shieldVis1.visible = true;
+                            console.log('Shield health increase! Shield power: ', this.spaceshipShield1);
                             spriteB.destroy();
                             this.powerupSound.play();
                         }
@@ -122,54 +150,146 @@ export default class Game1PHard extends Phaser.Scene {
                         if (spriteB?.getData('type') == 'enemy1' || spriteB?.getData('type') == 'enemy2' || spriteB?.getData('type') == 'enemy3') {
                             console.log('collided with enemy');
                             this.explosionSound.play();
-                            if (this.spaceshipShield != 0) {
-                                this.spaceshipShield--;
-                                console.log('Shield took hit... Shield left: ', this.spaceshipShield);
-                                if(this.spaceshipShield == 0){
-                                    if(!this.shieldVis?.active)
+                            if (this.spaceshipShield1 != 0) {
+                                this.spaceshipShield1--;
+                                console.log('Shield took hit... Shield left: ', this.spaceshipShield1);
+                                if (this.spaceshipShield1 == 0) {
+                                    if (!this.shieldVis1?.active)
                                         return;
-                                    this.shieldVis.visible = false;
+                                    this.shieldVis1.visible = false;
                                 }
                             }
-                            else{
+                            else {
                                 events.emit('collide-enemy');
                             }
                         }
                         if (spriteB == this.bossShip) {
                             console.log('Collided with boss');
-                            if (this.spaceshipShield != 0) {
-                                this.spaceshipShield--;
-                                console.log('Shield took hit... Shield left: ', this.spaceshipShield);
-                                if(this.spaceshipShield == 0){
-                                    if(!this.shieldVis?.active)
+                            if (this.spaceshipShield1 != 0) {
+                                this.spaceshipShield1--;
+                                console.log('Shield took hit... Shield left: ', this.spaceshipShield1);
+                                if (this.spaceshipShield1 == 0) {
+                                    if (!this.shieldVis1?.active)
                                         return;
-                                    this.shieldVis.visible = false;
+                                    this.shieldVis1.visible = false;
                                 }
                             }
-                            else{
+                            else {
                                 events.emit('collide-enemy');
                             }
                         }
                         if (spriteB?.getData('type') == 'asteroid') {
                             console.log('collided with asteroid');
-                            if (this.spaceshipShield != 0) {
-                                this.spaceshipShield--;
-                                console.log('Shield took hit... Shield left: ', this.spaceshipShield);
-                                if(this.spaceshipShield == 0){
-                                    if(!this.shieldVis?.active)
+                            if (this.spaceshipShield1 != 0) {
+                                this.spaceshipShield1--;
+                                console.log('Shield took hit... Shield left: ', this.spaceshipShield1);
+                                if (this.spaceshipShield1 == 0) {
+                                    if (!this.shieldVis1?.active)
                                         return;
-                                    this.shieldVis.visible = false;
+                                    this.shieldVis1.visible = false;
                                 }
                             }
-                            else{
+                            else {
                                 events.emit('collide-enemy');
                             }
                             this.explosionSound.play();
                         }
-
                     });
-                    break;
 
+                    this.spaceship2 = this.matter.add.sprite(x, y, 'space')
+                        .play('spaceship-idle2');
+
+                    //makes invisible shield, will only appear if there is a shield
+                    this.shieldVis2 = this.matter.add.sprite(x, y, 'space', 'Effects/shield1.png');
+                    this.shieldVis2.visible = false;
+                    this.shieldVis2.setCollisionGroup(1);
+                    this.shieldVis2.setCollidesWith(0);
+
+                    // configure collision detection
+                    this.spaceship2.setOnCollide((data: MatterJS.ICollisionPair) => {
+                        const spriteA = (data.bodyA as MatterJS.BodyType).gameObject as Phaser.Physics.Matter.Sprite
+                        const spriteB = (data.bodyB as MatterJS.BodyType).gameObject as Phaser.Physics.Matter.Sprite
+
+                        if (!spriteA?.getData || !spriteB?.getData)
+                            return;
+                        if (spriteA?.getData('type') == 'speedup') {
+                            console.log('collided with speedup');
+                            this.powerupSound.play();
+                        }
+                        // Where powerup is collided with spaceship
+                        if (spriteB?.getData('type') == 'speedup') {
+                            this.spaceshipZoom2++;
+                            console.log('Speed up! Speed is: ', this.spaceshipZoom2);
+                            spriteB.destroy();
+                            setTimeout(() => { this.spaceshipZoom2 = 1, console.log('Speed reverted') }, 5000);
+
+                            this.powerupSound.play();
+                        }
+                        if (spriteB?.getData('type') == 'shield') {
+                            if (!this.shieldVis2?.active)
+                                return;
+                            this.spaceshipShield2++;
+                            this.shieldVis2.visible = true;
+                            console.log('Shield health increase! Shield power: ', this.spaceshipShield2);
+                            spriteB.destroy();
+                            this.powerupSound.play();
+                        }
+                        if (spriteB.getData('type') == 'pill') {
+                            console.log('increase life!');
+                            spriteB.destroy();
+                            events.emit('life-up');
+                            this.powerupSound.play();
+                        }
+                        if (spriteB?.getData('type') == 'enemy1' || spriteB?.getData('type') == 'enemy2' || spriteB?.getData('type') == 'enemy3') {
+                            console.log('collided with enemy');
+                            this.explosionSound.play();
+                            if (this.spaceshipShield2 != 0) {
+                                this.spaceshipShield2--;
+                                console.log('Shield took hit... Shield left: ', this.spaceshipShield2);
+                                if (this.spaceshipShield2 == 0) {
+                                    if (!this.shieldVis2?.active)
+                                        return;
+                                    this.shieldVis2.visible = false;
+                                }
+                            }
+                            else {
+                                events.emit('collide-enemy');
+                            }
+                        }
+                        if (spriteB == this.bossShip) {
+                            console.log('Collided with boss');
+                            if (this.spaceshipShield2 != 0) {
+                                this.spaceshipShield2--;
+                                console.log('Shield took hit... Shield left: ', this.spaceshipShield2);
+                                if (this.spaceshipShield2 == 0) {
+                                    if (!this.shieldVis2?.active)
+                                        return;
+                                    this.shieldVis2.visible = false;
+                                }
+                            }
+                            else {
+                                events.emit('collide-enemy');
+                            }
+                        }
+                        if (spriteB?.getData('type') == 'asteroid') {
+                            console.log('collided with asteroid');
+                            if (this.spaceshipShield2 != 0) {
+                                this.spaceshipShield2--;
+                                console.log('Shield took hit... Shield left: ', this.spaceshipShield2);
+                                if (this.spaceshipShield2 == 0) {
+                                    if (!this.shieldVis2?.active)
+                                        return;
+                                    this.shieldVis2.visible = false;
+                                }
+                            }
+                            else {
+                                events.emit('collide-enemy');
+                            }
+                            this.explosionSound.play();
+                        }
+                    });
+
+                    break;
                 case 'speedup':
                     const speedup = this.matter.add.sprite(x + 20, y, 'space', 'Power-ups/bolt_gold.png', {
                         isStatic: true,
@@ -221,7 +341,6 @@ export default class Game1PHard extends Phaser.Scene {
                     asteroid.setData('type','asteroid');
                     asteroid2.setData('type','asteroid');
                     break;
-
             }
         });
 
@@ -229,26 +348,27 @@ export default class Game1PHard extends Phaser.Scene {
         this.powerupSound = this.sound.add('powerup');
         this.explosionSound = this.sound.add('explosion');
         this.laserSound = this.sound.add('laser');
-        this.backgroundMusic = this.sound.add('neon');
+        this.backgroundMusic = this.sound.add('pulsar');
 
         events.emit('timeUpdated', this.time.now);
     }
 
     update() {
-        if (!this.spaceship?.active || !this.shieldVis?.active)   // This checks if the spaceship has been created yet
+        if (!this.spaceship?.active || !this.shieldVis1?.active)   // This checks if the spaceship has been created yet
             return;
 
-        //This does the boss health check, uncomment only when level repetition is complete
-        if(this.bossHealth <= 0){ //Checks to see if the boss is dead, if so, end level
-            this.bossShip?.destroy();
-            console.log('Level Complete!');
-            this.scene.start('gameover');
+        if (!this.spaceship2?.active || !this.shieldVis2?.active)
             return;
-        }
-    
+
+        /*This does the boss health check, uncomment only when level repetition is complete
+       if(this.bossHealth <= 0){ //Checks to see if the boss is dead, if so, end level
+           this.bossShip?.destroy();
+           console.log('Level Complete!');
+           return;
+       }
+       */
+
         //IF player reaches the boss section, it will run the boss phase and patterns
-        //Hard difficulty change: Boss will shoot more sparatic in tick counters,
-        //boss will move faster the less health is has
         if (this.cameras.main.scrollY <= 0 && this.bossHealth > 0) {
             //console.log("You have reached the final boss section" , this.tickCounter);
             if (!this.bossShip?.active)   // This checks if the bossShip has been created yet
@@ -261,7 +381,7 @@ export default class Game1PHard extends Phaser.Scene {
                 this.createEnemyLaser(this.bossShip.x, this.bossShip.y + 250, 10, -this.turboSpeed, Math.PI);
                 this.tickCounter++;
             }
-            else if (this.tickCounter == 120 || this.tickCounter == 160) {
+            else if (this.tickCounter == 120|| this.tickCounter == 160) {
                 //console.log("Boss shoots quad laser");
                 this.createEnemyLaser(this.bossShip.x, this.bossShip.y + 250, -15, -this.turboSpeed, Math.PI);
                 this.createEnemyLaser(this.bossShip.x, this.bossShip.y + 250, -5, -this.turboSpeed, Math.PI);
@@ -295,7 +415,8 @@ export default class Game1PHard extends Phaser.Scene {
             this.cameras.main.scrollY = this.cameras.main.scrollY + this.scrollSpeed;
             scrollDiff -= this.cameras.main.scrollY
             //console.log(this.cameras.main.scrollY);//this is to debug the scroll
-            this.spaceship.setY(this.spaceship.y - scrollDiff) // sync scroll speed with ship speed
+            this.spaceship.setY(this.spaceship.y - scrollDiff)
+            this.spaceship2.setY(this.spaceship2.y - scrollDiff) // sync scroll speed with ship speed
         }
         // Emit the time event with the current time value
         //events.emit('timeUpdated', this.time.now);
@@ -304,23 +425,22 @@ export default class Game1PHard extends Phaser.Scene {
         //------------------------------------------
 
         // handle keyboard input
-        //spaceshipZoom is speed multiplier
         if (this.cursors.left.isDown) {
-            this.spaceship.setVelocityX(-this.speed*this.spaceshipZoom);
+            this.spaceship.setVelocityX(-this.speed * this.spaceshipZoom1);
             if (this.spaceship.x < 50) this.spaceship.setX(50);    // left boundry
             else this.cameras.main.scrollX = this.cameras.main.scrollX - 0.2
             this.spaceship.flipX = true;
         } else if (this.cursors.right.isDown) {
-            this.spaceship.setVelocityX(this.speed*this.spaceshipZoom);
+            this.spaceship.setVelocityX(this.speed * this.spaceshipZoom1);
             if (this.spaceship.x > 1550) this.spaceship.setX(1550);    // right boundry 
             else this.cameras.main.scrollX = this.cameras.main.scrollX + 0.2
             this.spaceship.flipX = false;
         } else if (this.cursors.up.isDown) {
-            this.spaceship.setVelocityY(-this.speed*this.spaceshipZoom)
+            this.spaceship.setVelocityY(-this.speed * this.spaceshipZoom1)
             if (this.spaceship.y < this.cameras.main.scrollY + 110) this.spaceship.setY(this.cameras.main.scrollY + 110);
             this.spaceship.flipY = false;
         } else if (this.cursors.down.isDown) {
-            this.spaceship.setVelocityY(this.speed*this.spaceshipZoom)
+            this.spaceship.setVelocityY(this.speed * this.spaceshipZoom1)
             if (this.spaceship.y > this.cameras.main.scrollY + 965) this.spaceship.setY(this.cameras.main.scrollY + 965);
             this.spaceship.flipY = false;
         } else {
@@ -328,12 +448,41 @@ export default class Game1PHard extends Phaser.Scene {
             this.spaceship.setVelocityY(0);
         }
         //this is the shild sprite following the ship
-        this.shieldVis.x = this.spaceship.x;
-        this.shieldVis.y = this.spaceship.y;
+        this.shieldVis1.x = this.spaceship.x;
+        this.shieldVis1.y = this.spaceship.y;
 
-        //create enemies on a random number check
-        //Hard Difficulty change: Enemies now spawn more frequently
-        if (Math.random() * 100 > 98.0 && this.cameras.main.scrollY >= 0) {
+        if (this.keys.A.isDown) {
+            this.spaceship2.setVelocityX(-this.speed * this.spaceshipZoom2);
+            if (this.spaceship2.x < 50) this.spaceship2.setX(50);    // left boundry
+            else this.cameras.main.scrollX = this.cameras.main.scrollX - 0.2
+            this.spaceship2.flipX = true;
+        }
+        else if (this.keys.D.isDown) {
+            this.spaceship2.setVelocityX(this.speed * this.spaceshipZoom2);
+            if (this.spaceship2.x > 1550) this.spaceship2.setX(1550);    // right boundry 
+            else this.cameras.main.scrollX = this.cameras.main.scrollX + 0.2
+            this.spaceship2.flipX = false;
+        }
+        else if (this.keys.W.isDown) {
+            this.spaceship2.setVelocityY(-this.speed * this.spaceshipZoom2);
+            if (this.spaceship2.y < this.cameras.main.scrollY + 110) this.spaceship2.setY(this.cameras.main.scrollY + 110);
+            this.spaceship2.flipY = false;
+        }
+        else if (this.keys.S.isDown) {
+            this.spaceship2.setVelocityY(this.speed * this.spaceshipZoom2);
+            if (this.spaceship2.y > this.cameras.main.scrollY + 965) this.spaceship2.setY(this.cameras.main.scrollY + 965);
+            this.spaceship2.flipY = false;
+        }
+        else {
+            this.spaceship2.setVelocityX(0);
+            this.spaceship2.setVelocityY(0);
+        }
+        //this is the shild sprite following the ship
+        this.shieldVis2.x = this.spaceship2.x;
+        this.shieldVis2.y = this.spaceship2.y;
+
+        //create enemies on a random number check 
+        if (Math.random() * 100 > 98 && this.cameras.main.scrollY >= 0) {
             this.createEnemy(Math.random() * 1500, this.cameras.main.scrollY + 90);
         }
 
@@ -344,10 +493,14 @@ export default class Game1PHard extends Phaser.Scene {
             this.createLaser(this.spaceship.x, this.spaceship.y - 50, 0, this.shootSpeed, Math.PI);
         }
 
+        const spaceJustPressed = Phaser.Input.Keyboard.JustDown(this.cursors.space);
+        if (this.cursors.space.isDown && spaceJustPressed) {
+            this.createLaser(this.spaceship2.x, this.spaceship2.y - 50, 0, this.shootSpeed, Math.PI);
+        }
+
     }
 
-
-    // create a laser sprite for friendly ships
+    // create a laser sprite
     createLaser(x: number, y: number, xSpeed: number, ySpeed: number, radians: number = 0) {
         var laser = this.matter.add.sprite(x, y, 'space', 'Lasers/laserGreen08.png', { isSensor: true });
         this.upgraded;
@@ -417,16 +570,35 @@ export default class Game1PHard extends Phaser.Scene {
                 console.log('enemy laser hit spaceship');
                 //spriteA.destroy();
                 spriteB.destroy();
-                if (this.spaceshipShield != 0) {
-                    this.spaceshipShield--;
-                    console.log('Shield took hit... Shield left: ', this.spaceshipShield);
-                    if(this.spaceshipShield == 0){
-                        if(!this.shieldVis?.active)
+                if (this.spaceshipShield1 != 0) {
+                    this.spaceshipShield1--;
+                    console.log('Shield took hit... Shield left: ', this.spaceshipShield1);
+                    if (this.spaceshipShield1 == 0) {
+                        if (!this.shieldVis1?.active)
                             return;
-                        this.shieldVis.visible = false;
+                        this.shieldVis1.visible = false;
                     }
                 }
-                else{
+                else {
+                    events.emit('collide-enemy');
+                }
+                this.explosionSound.play();
+                //events.emit('enemy-explode');
+            }
+            if (spriteA == this.spaceship2) {
+                console.log('enemy laser hit spaceship');
+                //spriteA.destroy();
+                spriteB.destroy();
+                if (this.spaceshipShield2 != 0) {
+                    this.spaceshipShield2--;
+                    console.log('Shield took hit... Shield left: ', this.spaceshipShield2);
+                    if (this.spaceshipShield2 == 0) {
+                        if (!this.shieldVis2?.active)
+                            return;
+                        this.shieldVis2.visible = false;
+                    }
+                }
+                else {
                     events.emit('collide-enemy');
                 }
                 this.explosionSound.play();
@@ -529,11 +701,18 @@ export default class Game1PHard extends Phaser.Scene {
         })
     }
 
+
     private createSpaceshipAnimations() {
         this.anims.create({
             key: 'spaceship-idle',
             frames: [{ key: 'space', frame: 'playerShip1_blue.png' }]
         });
+
+        this.anims.create({
+            key: 'spaceship-idle2',
+            frames: [{ key: 'space', frame: 'playerShip1_red.png' }]
+        });
+
         this.anims.create({
             key: 'spaceship-explode',
             frameRate: 30,
