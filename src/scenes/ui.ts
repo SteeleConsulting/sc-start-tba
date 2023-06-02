@@ -9,8 +9,8 @@ import WebFontFile from "~/WebFontFile";
 
 export default class UI extends Phaser.Scene {
 
-    private powerupsLabel!: Phaser.GameObjects.Text;
-    private powerupsCollected: number = 0;
+    private shieldsLabel!: Phaser.GameObjects.Text;
+    private shieldsCollected: number = 0;
     private scoreLabel!: Phaser.GameObjects.Text;
     private scoreCollected: number = 0;
     private livesLabel!: Phaser.GameObjects.Text;
@@ -19,7 +19,8 @@ export default class UI extends Phaser.Scene {
     private keys
     private endTrigger = false
     
-
+    
+    
 
 
     colorway = {
@@ -56,6 +57,7 @@ export default class UI extends Phaser.Scene {
     create(){
         this.keys = this.input.keyboard.addKeys('P,ESC')
         const { width, height } = this.scale;
+        
 
         
         // create UI border
@@ -80,18 +82,24 @@ export default class UI extends Phaser.Scene {
             fontFamily : 'Righteous', fontStyle : 'bolder' , fontSize: '40px', color: '#' + this.colorway['pause']
         }).setInteractive().on('pointerdown', () => {if(!this.scene.isPaused('game')) this.pauseGame()})
 
-        this.powerupsLabel = this.add.text(1000, 18, 'PowerUps: 0', {
+        this.shieldsLabel = this.add.text(1000, 18, 'Shields: 0', {
             fontFamily : 'Righteous', fontSize: '32px', color: '#' + this.colorway['UIText']
 
         });
 
 
         // listen to events coming from the game scene
-        events.on('powerup-collided', () => {
-            this.powerupsCollected++;
-            this.powerupsLabel.text = 'PowerUps: ' + this.powerupsCollected;
+        events.on('shields-collected', () => {
+            this.shieldsCollected++;
+            this.shieldsLabel.text = 'Shields: ' + this.shieldsCollected;
             
         })
+        events.on('subtract-shield', () => {
+            this.shieldsCollected--;
+            this.shieldsLabel.text = 'Shields: ' + this.shieldsCollected;
+            
+        })
+
         this.scoreLabel = this.add.text(300, 18, 'Score: 0', {
             fontFamily : 'Righteous', fontSize: '32px', color: '#' + this.colorway['UIText']
         });
@@ -125,6 +133,7 @@ export default class UI extends Phaser.Scene {
                 if(this.livesLeft>0){
                     this.livesLeft --;
                     this.livesLabel.text = 'Lives: ' + this.livesLeft;
+                
 
                 }else if (this.livesLeft <= 0 && this.endTrigger == false){
 

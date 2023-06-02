@@ -9,16 +9,15 @@ import WebFontFile from "~/WebFontFile";
 
 export default class UI2 extends Phaser.Scene {
 
-    private powerupsLabel!: Phaser.GameObjects.Text;
-    private powerupsCollected: number = 0;
+    private shieldsLabel!: Phaser.GameObjects.Text;
+    private shieldsCollected: number = 0;
     private sc1!: Phaser.GameObjects.Text;
     private sc1Collected: number = 0;
     
     //private timeLabel!: Phaser.GameObjects.Text;
     private lives!: Phaser.GameObjects.Text;
-    private livesLeft: number = 1;
-    private l2!: Phaser.GameObjects.Text;
-    private l2Left: number = 0;
+    private livesLeft: number = 5;
+    
     private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
     private keys
 
@@ -82,16 +81,21 @@ export default class UI2 extends Phaser.Scene {
             fontFamily : 'Righteous', fontStyle : 'bolder' , fontSize: '40px', color: '#' + this.colorway['pause']
         }).setInteractive().on('pointerdown', () => {if(!this.scene.isPaused('players2')) this.pauseGame()})
 
-        this.powerupsLabel = this.add.text(1000, 18, 'PowerUps: 0', {
+        this.shieldsLabel = this.add.text(1000, 18, 'Shields: 0', {
             fontFamily : 'Righteous', fontSize: '32px', color: '#' + this.colorway['UIText']
 
         });
 
 
         // listen to events coming from the game scene
-        events.on('powerup-collided', () => {
-            this.powerupsCollected++;
-            this.powerupsLabel.text = 'PowerUps: ' + this.powerupsCollected;
+        events.on('shields-collected', () => {
+            this.shieldsCollected++;
+            this.shieldsLabel.text = 'Shields: ' + this.shieldsCollected;
+            
+        })
+        events.on('subtract-shield', () => {
+            this.shieldsCollected--;
+            this.shieldsLabel.text = 'Shields: ' + this.shieldsCollected;
             
         })
         // SCORE LABELS 
@@ -123,7 +127,7 @@ export default class UI2 extends Phaser.Scene {
 
        // LIVES 
       
-        this.lives = this.add.text(10, 18, 'L1: 1', {
+        this.lives = this.add.text(10, 18, 'Lives: 5', {
             fontFamily : 'Righteous', fontSize: '32px', color: '#' + this.colorway['UIText']
         });
         /*
@@ -139,7 +143,7 @@ export default class UI2 extends Phaser.Scene {
         events.on('collide-enemy', () => {
                 if(this.livesLeft>0){
                     this.livesLeft --;
-                    this.lives.text = 'L1: ' + this.livesLeft;
+                    this.lives.text = 'Lives: ' + this.livesLeft;
                 }else{
                     this.scene.start('gameover');
                     events.emit('gameover');

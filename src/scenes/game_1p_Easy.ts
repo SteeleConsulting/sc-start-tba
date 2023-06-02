@@ -108,6 +108,7 @@ export default class Game1PEasy extends Phaser.Scene {
                             if(!this.shieldVis?.active)
                                 return;
                             this.spaceshipShield++;
+                            events.emit('shields-collected');
                             this.shieldVis.visible = true;
                             console.log('Shield health increase! Shield power: ', this.spaceshipShield);
                             spriteB.destroy();
@@ -124,6 +125,7 @@ export default class Game1PEasy extends Phaser.Scene {
                             this.explosionSound.play();
                             if (this.spaceshipShield != 0) {
                                 this.spaceshipShield--;
+                                events.emit('subtract-shield');
                                 console.log('Shield took hit... Shield left: ', this.spaceshipShield);
                                 if(this.spaceshipShield == 0){
                                     if(!this.shieldVis?.active)
@@ -132,13 +134,14 @@ export default class Game1PEasy extends Phaser.Scene {
                                 }
                             }
                             else{
-                                events.emit('collide-enemy');
+                                events.emit('collide-enemy')
                             }
                         }
                         if (spriteB == this.bossShip) {
                             console.log('Collided with boss');
                             if (this.spaceshipShield != 0) {
                                 this.spaceshipShield--;
+                                events.emit('subtract-shield');
                                 console.log('Shield took hit... Shield left: ', this.spaceshipShield);
                                 if(this.spaceshipShield == 0){
                                     if(!this.shieldVis?.active)
@@ -155,6 +158,7 @@ export default class Game1PEasy extends Phaser.Scene {
                             console.log('collided with asteroid');
                             if (this.spaceshipShield != 0) {
                                 this.spaceshipShield--;
+                                events.emit('subtract-shield');
                                 console.log('Shield took hit... Shield left: ', this.spaceshipShield);
                                 if(this.spaceshipShield == 0){
                                     if(!this.shieldVis?.active)
@@ -164,6 +168,7 @@ export default class Game1PEasy extends Phaser.Scene {
                             }
                             else{
                                 events.emit('collide-enemy');
+
                             }
                             this.explosionSound.play();
                         }
@@ -405,6 +410,7 @@ export default class Game1PEasy extends Phaser.Scene {
                 spriteB.destroy();
                 if (this.spaceshipShield != 0) {
                     this.spaceshipShield--;
+                    events.emit('subtract-shield');
                     console.log('Shield took hit... Shield left: ', this.spaceshipShield);
                     if(this.spaceshipShield == 0){
                         if(!this.shieldVis?.active)

@@ -18,7 +18,7 @@ export default class Game2PHard extends Phaser.Scene {
     private spaceship2?: Phaser.Physics.Matter.Sprite;
     private bossShip?: Phaser.Physics.Matter.Sprite;
 
-    private bossHealth = 50;
+    private bossHealth = 70;
     private bossDirection = false;//false means left, true means right
 
     private upgraded: boolean = false;
@@ -136,6 +136,7 @@ export default class Game2PHard extends Phaser.Scene {
                             if (!this.shieldVis1?.active)
                                 return;
                             this.spaceshipShield1++;
+                            events.emit('shields-collected');
                             this.shieldVis1.visible = true;
                             console.log('Shield health increase! Shield power: ', this.spaceshipShield1);
                             spriteB.destroy();
@@ -229,6 +230,7 @@ export default class Game2PHard extends Phaser.Scene {
                             if (!this.shieldVis2?.active)
                                 return;
                             this.spaceshipShield2++;
+                            events.emit('shields-collected');
                             this.shieldVis2.visible = true;
                             console.log('Shield health increase! Shield power: ', this.spaceshipShield2);
                             spriteB.destroy();
@@ -245,6 +247,7 @@ export default class Game2PHard extends Phaser.Scene {
                             this.explosionSound.play();
                             if (this.spaceshipShield2 != 0) {
                                 this.spaceshipShield2--;
+                                events.emit('subtract-shield');
                                 console.log('Shield took hit... Shield left: ', this.spaceshipShield2);
                                 if (this.spaceshipShield2 == 0) {
                                     if (!this.shieldVis2?.active)
@@ -260,6 +263,7 @@ export default class Game2PHard extends Phaser.Scene {
                             console.log('Collided with boss');
                             if (this.spaceshipShield2 != 0) {
                                 this.spaceshipShield2--;
+                                events.emit('subtract-shield');
                                 console.log('Shield took hit... Shield left: ', this.spaceshipShield2);
                                 if (this.spaceshipShield2 == 0) {
                                     if (!this.shieldVis2?.active)
@@ -275,6 +279,7 @@ export default class Game2PHard extends Phaser.Scene {
                             console.log('collided with asteroid');
                             if (this.spaceshipShield2 != 0) {
                                 this.spaceshipShield2--;
+                                events.emit('subtract-shield');
                                 console.log('Shield took hit... Shield left: ', this.spaceshipShield2);
                                 if (this.spaceshipShield2 == 0) {
                                     if (!this.shieldVis2?.active)
@@ -360,13 +365,14 @@ export default class Game2PHard extends Phaser.Scene {
         if (!this.spaceship2?.active || !this.shieldVis2?.active)
             return;
 
-        /*This does the boss health check, uncomment only when level repetition is complete
-       if(this.bossHealth <= 0){ //Checks to see if the boss is dead, if so, end level
+        //This does the boss health check, uncomment only when level repetition is complete
+        if(this.bossHealth <= 0){ //Checks to see if the boss is dead, if so, end level
            this.bossShip?.destroy();
            console.log('Level Complete!');
+           this.scene.start('gameover');
            return;
-       }
-       */
+        }
+       
 
         //IF player reaches the boss section, it will run the boss phase and patterns
         if (this.cameras.main.scrollY <= 0 && this.bossHealth > 0) {
@@ -404,7 +410,7 @@ export default class Game2PHard extends Phaser.Scene {
                 this.tickCounter++;
             }
             if (this.bossShip?.active) {
-                this.bossMovement(this.bossShip.x, ((50 - this.bossHealth) / 3) * 2);
+                this.bossMovement(this.bossShip.x, ((70 - this.bossHealth) / 3) * 2);
             }
         }
 
@@ -591,6 +597,7 @@ export default class Game2PHard extends Phaser.Scene {
                 spriteB.destroy();
                 if (this.spaceshipShield2 != 0) {
                     this.spaceshipShield2--;
+                    events.emit('subtract-shield');
                     console.log('Shield took hit... Shield left: ', this.spaceshipShield2);
                     if (this.spaceshipShield2 == 0) {
                         if (!this.shieldVis2?.active)
