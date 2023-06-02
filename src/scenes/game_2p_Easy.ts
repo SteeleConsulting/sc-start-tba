@@ -43,8 +43,8 @@ export default class Game2PEasy extends Phaser.Scene {
         this.cursors = this.input.keyboard.createCursorKeys();  // setup keyboard input
         // load the other scenes
         // this.scene.launch('start');
+        // this.scene.launch('gameover');
         this.scene.launch('ui2');
-        this.scene.launch('gameover');
     }
 
     preload() {
@@ -62,10 +62,13 @@ export default class Game2PEasy extends Phaser.Scene {
         this.load.audio('explosion', ['assets/sounds/explosion.mp3']);
         this.load.audio('powerup', ['assets/sounds/powerup.wav']);
         this.load.audio('pulsar', ['assets/sounds/pulsar-office.mp3']);
+        this.load.audio('easy', ['assets/sounds/neon-gaming-128925.mp3']);
 
     }
 
     create() {
+        this.backgroundMusic = this.sound.add('easy');
+        this.backgroundMusic.play();
         this.keys = this.input.keyboard.addKeys('A,W,S,D');
         const { width, height } = this.scale;  // width and height of the scene
 
@@ -344,7 +347,6 @@ export default class Game2PEasy extends Phaser.Scene {
         this.powerupSound = this.sound.add('powerup');
         this.explosionSound = this.sound.add('explosion');
         this.laserSound = this.sound.add('laser');
-        this.backgroundMusic = this.sound.add('pulsar');
 
         events.emit('timeUpdated', this.time.now);
     }
