@@ -3,7 +3,6 @@
 import Phaser, { NONE, Physics } from "phaser";
 import { sharedInstance as events } from "../helpers/eventCenter";
 import WebFontFile from "~/WebFontFile";
-import GameOver from "./gameover";
 
 
 

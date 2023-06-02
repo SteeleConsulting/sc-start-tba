@@ -23,7 +23,7 @@ const config: Phaser.Types.Core.GameConfig = {
             }
         }
     },
-    scene: [StartScreen, Game,Levels, Game2, Players, Players2, UI, UI2, GameOver]   // this is the list of scenes to be used in the game, only the first scene is auto launched
+    scene: [StartScreen,Levels, Game, Game2, Players, Players2, UI, UI2, GameOver]   // this is the list of scenes to be used in the game, only the first scene is auto launched
 };
 
 
