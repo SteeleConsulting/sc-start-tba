@@ -1,4 +1,4 @@
-import Phaser from "phaser";
+import Phaser, { NONE, Physics } from "phaser";
 import { sharedInstance as events, sharedInstance } from "../helpers/eventCenter";
 import WebFontFile from "~/WebFontFile";
 
@@ -27,11 +27,12 @@ export default class GameOver extends Phaser.Scene{
     create(){
         let {width, height} = this.scale
 
-        events.on('gameover', () => {console.log('gameover')
+       
+            console.log('gameover')
             this.add.text(width / 6 - 10, height / 5, 'GAME OVER', {
                 fontFamily : 'Righteous', fontSize: '190px', color: 'white'
             });
-        });
+     
 
         // events.on('victory', () => {
         //     this.add.text(width / 6 - 10, height / 5, 'GAME OVER', {
