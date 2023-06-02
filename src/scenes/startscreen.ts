@@ -1,6 +1,8 @@
 import Phaser from "phaser";
-import { sharedInstance as events } from "../helpers/eventCenter";
+import { sharedInstance as events, sharedInstance } from "../helpers/eventCenter";
 import WebFontFile from "~/WebFontFile";
+import GameOver from "./gameover";
+import Players from "./players";
 
 export default class StartScreen extends Phaser.Scene {
     private backgroundMusic!: Phaser.Sound.BaseSound;
@@ -110,8 +112,6 @@ export default class StartScreen extends Phaser.Scene {
     openCredits() {
         let {width, height} = this.scale
 
-
-        
         var credBox = this.add.group();
         credBox.add(this.makeButton(width / 4, height / 4, width / 2, height / 2, this.colorway['credBack2'], 15))
         credBox.add(this.makeButton(width / 4 + 10, height / 4 + 5, width / 2, height / 2, this.colorway['credBack'], 15))

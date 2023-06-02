@@ -60,16 +60,18 @@ export default class Players extends Phaser.Scene {
         this.makeButton(width / 3 + 10, height  / 2 + 135, width / 3, height / 8, this.colorway['p2Button2'], 15)
 
         var p2Text = this.add.text(width / 3 + 65, height / 2 + 155, '2 PLAYERS', {
-            fontFamily : 'Righteous', fontSize: '80px', color : this.colorway['p2Text']
+            fontFamily : 'Righteous', fontSize: '80px', color : '#' + this.colorway['p2Text']
         }).setInteractive().on('pointerdown', () => (this.p2Game()))
         
         // back button
         this.makeButton(width * 5 / 6, height * 6 / 7, width / 8, height / 14, this.colorway['back1'], 15)
+        .setInteractive().on('pointerdown', () => (this.goBack()))
         this.makeButton(width * 5 / 6 + 10, height * 6 / 7 + 5, width / 8, height / 14, this.colorway['back2'], 15)
+        .setInteractive().on('pointerdown', () => (this.goBack()))
 
         this.add.text(width * 5 / 6 + 45, height * 6 / 7 + 15, 'BACK', {
             fontFamily : 'Righteous', fontSize : '40px', color : '#' + this.colorway['backText']
-        }).setInteractive().on('pointerdown', () => (this.backButton()))
+        }).setInteractive().on('pointerdown', () => (this.goBack()))
     }
 
     update() { }
@@ -93,6 +95,6 @@ export default class Players extends Phaser.Scene {
     } // needs way to indicate 2 players
 
     goBack() {
-        this.scene.start('StartScreen')
+        this.scene.start('start')
     }
 }

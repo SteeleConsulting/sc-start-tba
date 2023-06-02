@@ -3,6 +3,7 @@
 import Phaser, { NONE, Physics } from "phaser";
 import { sharedInstance as events } from "../helpers/eventCenter";
 import WebFontFile from "~/WebFontFile";
+import GameOver from "./gameover";
 
 
 
@@ -15,14 +16,25 @@ export default class UI extends Phaser.Scene {
     private scoreCollected: number = 0;
     private livesLabel!: Phaser.GameObjects.Text;
     private livesLeft: number = 3;
-
+    private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
+    private keys
     
 
 
 
     colorway = {
         'border1' : 0x1D3557,
-        'border2' : 0x457B9D 
+        'border2' : 0x457B9D,
+        'resume1' : 0xE63946,
+        'resume2' : 0x457B9D,
+        'restart1' : 0xE63946,
+        'restart2' : 0x457B9D,
+        'start1' : 0xE63946,
+        'start2' : 0x457B9D,
+        'UIText' : 'F1FAEE',
+        'pause' : 'E63946',
+        'pauseText' : 'E63946',
+        'pauseButtonText' : 'F1FAEE',
     }
 
     constructor() {
@@ -30,6 +42,7 @@ export default class UI extends Phaser.Scene {
     }
 
     init() {
+        this.cursors = this.input.keyboard.createCursorKeys();
     }
 
     preload(){
@@ -41,7 +54,7 @@ export default class UI extends Phaser.Scene {
     }
 
     create(){
-
+        this.keys = this.input.keyboard.addKeys('P,ESC')
         const { width, height } = this.scale;
 
         
@@ -57,11 +70,18 @@ export default class UI extends Phaser.Scene {
         this.makeButton(width, 0, -20, height,this.colorway['border2'],0)
         this.makeButton(0, height,width, -20,this.colorway['border2'], 0)
 
+        /*------------All objects under here, above is border-----------*/
 
+        this.add.text(width - 55, 13, '| |', {
+            fontFamily : 'Righteous', fontStyle : 'bolder' , fontSize: '40px', color: '#' + this.colorway['pause']
+        }).setInteractive().on('pointerdown', () => {if(!this.scene.isPaused('game')) this.pauseGame()})
 
+        this.add.text(width - 60, 13, '| |', {
+            fontFamily : 'Righteous', fontStyle : 'bolder' , fontSize: '40px', color: '#' + this.colorway['pause']
+        }).setInteractive().on('pointerdown', () => {if(!this.scene.isPaused('game')) this.pauseGame()})
 
         this.powerupsLabel = this.add.text(1000, 18, 'PowerUps: 0', {
-            fontFamily : 'Righteous', fontSize: '32px', color: 'yellow'
+            fontFamily : 'Righteous', fontSize: '32px', color: '#' + this.colorway['UIText']
 
         });
 
@@ -73,7 +93,7 @@ export default class UI extends Phaser.Scene {
             
         })
         this.scoreLabel = this.add.text(300, 18, 'Score: 0', {
-            fontFamily : 'Righteous', fontSize: '32px', color: 'yellow'
+            fontFamily : 'Righteous', fontSize: '32px', color: '#' + this.colorway['UIText']
         });
         
         // Listen to the 'timeUpdated' event
@@ -96,7 +116,7 @@ export default class UI extends Phaser.Scene {
        // LIVES 
         
         this.livesLabel = this.add.text(20, 18, 'Lives: 3', {
-            fontFamily : 'Righteous', fontSize: '32px', color: 'yellow'
+            fontFamily : 'Righteous', fontSize: '32px', color: '#' + this.colorway['UIText']
         });
         
         
@@ -116,6 +136,11 @@ export default class UI extends Phaser.Scene {
     }
 
     update() {
+        const pJustPressed = Phaser.Input.Keyboard.JustDown(this.keys.P);
+        const escJustPressed = Phaser.Input.Keyboard.JustDown(this.keys.ESC);
+        if(!this.scene.isPaused('game') && (this.keys.P.isDown || this.keys.ESC.isDown) && !(pJustPressed || escJustPressed)){
+            this.pauseGame()
+        } 
 
     }
     
@@ -128,5 +153,41 @@ export default class UI extends Phaser.Scene {
         var button = this.add.graphics({fillStyle : {color : objColor}})
         button.fillRoundedRect(rect.x, rect.y, rect.width, rect.height, curve)
         return button
+    }
+
+    pauseGame(){
+        const {width, height} = this.scale
+        var pauseMenu = this.add.group()
+        this.scene.pause('game')
+        pauseMenu.add(this.makeButton(width * 3 / 8 - 20, height * 3 / 7 + 45, 500, 120, this.colorway['restart2'], 15))
+        pauseMenu.add(this.makeButton(width * 3 / 8 - 10, height * 3 / 7 + 50, 500, 120, this.colorway['restart1'], 15))
+
+        pauseMenu.add(this.makeButton(width * 3 / 8 - 20, height * 5 / 7 - 40, 500, 120, this.colorway['start2'], 15))
+        pauseMenu.add(this.makeButton(width * 3 / 8 - 10, height * 5 / 7 - 35, 500, 120, this.colorway['start1'], 15))
+
+
+        pauseMenu.add(this.add.text(width * 2 / 9 - 5, height / 6, 'GAME PAUSED', {
+            fontFamily : 'Righteous', fontStyle : 'bold', fontSize: '140px', color : '#' + this.colorway['pauseText']
+        }))
+
+        pauseMenu.add(this.add.text(width * 2 / 5 + 5, height * 3 / 7 + 75 , 'RESUME GAME', {
+            fontFamily : 'Righteous', fontSize: '55px', color : '#' + this.colorway['pauseButtonText']
+        }).setInteractive().on('pointerdown', () => {this.hidePauseMenu(pauseMenu)}))
+        
+        pauseMenu.add(this.add.text(width * 2 / 5 - 35, height * 5 / 7 - 10, 'RETURN TO MENU', {
+            fontFamily : 'Righteous', fontSize: '55px', color : '#' + this.colorway['pauseButtonText']
+        }).setInteractive().on('pointerdown', () => {this.returnStart(pauseMenu)}))
+    }
+
+    hidePauseMenu(pauseMenu) {
+        console.log('hide');
+        pauseMenu.destroy(true)
+        this.scene.run('game')
+    }
+
+    returnStart(pauseMenu){
+        pauseMenu.destroy()
+        this.scene.stop('game')
+        this.scene.start('start')
     }
 }
