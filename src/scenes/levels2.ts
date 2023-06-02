@@ -92,10 +92,10 @@ export default class Levels2 extends Phaser.Scene {
     }
 
     l1Game() {
-        this.scene.start('game_2p_easy')
+        this.scene.start('2p_easy')
     }
     l2Game() {
-        this.scene.start('games_2p_hard')
+        this.scene.start('2p_hard')
     }
    
     goBack() {
