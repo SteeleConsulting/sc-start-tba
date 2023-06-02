@@ -18,6 +18,7 @@ export default class UI extends Phaser.Scene {
     private livesLeft: number = 3;
     private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
     private keys
+    private endTrigger = false
     
 
 
@@ -126,9 +127,11 @@ export default class UI extends Phaser.Scene {
                     this.livesLeft --;
                     this.livesLabel.text = 'Lives: ' + this.livesLeft;
 
-                }else{
+                }else if (this.livesLeft <= 0 && this.endTrigger == false){
 
                     console.log('went into game over');
+                    this.endTrigger = true
+                    this.livesLeft = 3
                     this.scene.start('gameover')
                     
                 }    
@@ -175,7 +178,10 @@ export default class UI extends Phaser.Scene {
     pauseGame(){
         const {width, height} = this.scale
         var pauseMenu = this.add.group()
-        this.scene.pause('game')
+
+        this.scene.pause('1p_easy').pause('1p_hard')
+        .pause('2p_easy').pause('2p_hard')
+
         pauseMenu.add(this.makeButton(width * 3 / 8 - 20, height * 3 / 7 + 45, 500, 120, this.colorway['restart2'], 15))
         pauseMenu.add(this.makeButton(width * 3 / 8 - 10, height * 3 / 7 + 50, 500, 120, this.colorway['restart1'], 15))
 
@@ -199,28 +205,14 @@ export default class UI extends Phaser.Scene {
     hidePauseMenu(pauseMenu) {
         console.log('hide');
         pauseMenu.destroy(true)
-        if(this.scene.isActive('1p_easy')){
-            this.scene.resume('1p_easy')
-        } else if(this.scene.isActive('1p_hard')){
-            this.scene.resume('1p_hard')
-        } else if(this.scene.isActive('2p_easy')){
-            this.scene.resume('2p_easy')
-        } else if(this.scene.isActive('2p_hard')){
-            this.scene.resume('2p_hard')
-        }
+        this.scene.resume('1p_easy').resume('1p_hard')
+        .resume('2p_easy').resume('2p_hard')
     }
 
     returnStart(pauseMenu){
         pauseMenu.destroy()
-        if(this.scene.isActive('1p_easy')){
-            this.scene.run('1p_easy')
-        } else if(this.scene.isActive('game_1p_hard')){
-            this.scene.run('game_1p_hard')
-        } else if(this.scene.isActive('game_2p_easy')){
-            this.scene.run('game_2p_easy')
-        } else if(this.scene.isActive('game_2p_hard')){
-            this.scene.run('game_2p_hard')
-        }
-        this.scene.start('start')
+        this.scene.stop('1p_easy').stop('2p_easy')
+        .stop('1p_hard').stop('2p_hard').start('start')
+
     }
 }
