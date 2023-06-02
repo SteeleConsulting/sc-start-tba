@@ -129,6 +129,11 @@ export default class UI extends Phaser.Scene {
                     events.emit('gameover');
                 }    
         });
+        //increases life
+        events.on('life-up',() => {
+            this.livesLeft++;
+            this.livesLabel.text = 'Lives: ' + this.livesLeft;
+        });
        
 
         
