@@ -196,14 +196,8 @@ export default class UI extends Phaser.Scene {
         }).setInteractive().on('pointerdown', () => { this.hidePauseMenu(pauseMenu) }))
 
         pauseMenu.add(this.add.text(width * 2 / 5 - 35, height * 5 / 7 - 10, 'RETURN TO MENU', {
-<<<<<<< Updated upstream
             fontFamily: 'Righteous', fontSize: '55px', color: '#' + this.colorway['pauseButtonText']
         }).setInteractive().on('pointerdown', () => { this.returnStart(pauseMenu) }))
-=======
-            fontFamily : 'Righteous', fontSize: '55px', color : '#' + this.colorway['pauseButtonText']
-        }).setInteractive().on('pointerdown', () => {this.returnStart(pauseMenu)}))
-
->>>>>>> Stashed changes
     }
 
     hidePauseMenu(pauseMenu) {
