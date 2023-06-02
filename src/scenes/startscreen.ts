@@ -1,8 +1,6 @@
 import Phaser from "phaser";
 import { sharedInstance as events, sharedInstance } from "../helpers/eventCenter";
 import WebFontFile from "~/WebFontFile";
-import GameOver from "./gameover";
-import Players from "./players";
 
 export default class StartScreen extends Phaser.Scene {
     private backgroundMusic!: Phaser.Sound.BaseSound;
@@ -75,7 +73,7 @@ export default class StartScreen extends Phaser.Scene {
         // start text
         this.add.text(width / 2 - 225, height / 2 + 32, 'START GAME', {
             fontFamily: 'Righteous', fontSize: '70px', color : '#' + this.colorway['startText']
-        }).setInteractive().on('pointerdown', () => (this.selectLevels(), console.log('textclicked')));
+        }).setInteractive().on('pointerdown', () => (this.selectPlayers(), console.log('textclicked')));
 
         // logo text
         // this.add.text(30, height - 60, 'INSERT STEELE\n  LOGO HERE', {
@@ -106,9 +104,8 @@ export default class StartScreen extends Phaser.Scene {
     }
 
     // changes to levels screen
-    selectLevels(){
-        console.log('levels');
-        this.scene.start('levels');
+    selectPlayers(){
+        this.scene.start('player_select');
     }
 
     // create credit text box

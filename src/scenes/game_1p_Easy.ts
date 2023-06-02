@@ -1,7 +1,7 @@
 import Phaser, { Data } from "phaser";
 import { sharedInstance as events } from "../helpers/eventCenter";    // this is the shared events emitter
 
-export default class Game extends Phaser.Scene {
+export default class Game1PEasy extends Phaser.Scene {
 
     private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
     private spaceship?: Phaser.Physics.Matter.Sprite;
@@ -28,7 +28,7 @@ export default class Game extends Phaser.Scene {
     private backgroundMusic!: Phaser.Sound.BaseSound;
 
     constructor() {
-        super('game');
+        super('1p_easy');
     }
 
     init() {
@@ -36,9 +36,8 @@ export default class Game extends Phaser.Scene {
 
         // load the other scenes
         // this.scene.launch('start');
-        this.scene.launch('ui');
         //this.scene.launch('ui2');
-
+        this.scene.launch('ui');
         this.scene.launch('gameover');
     }
 

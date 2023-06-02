@@ -2,9 +2,9 @@ import Phaser from "phaser";
 import { sharedInstance as events } from "../helpers/eventCenter";
 import WebFontFile from "~/WebFontFile";
 
-export default class Players extends Phaser.Scene {
+export default class PlayerSelect extends Phaser.Scene {
     constructor() {
-        super('players');
+        super('player_select');
     }
     
 
@@ -86,11 +86,11 @@ export default class Players extends Phaser.Scene {
     }
 
     p1Game() {
-        this.scene.start('game')
+        this.scene.start('levels1')
     }
 
     p2Game() {
-        this.scene.start('players2')
+        this.scene.start('levels2')
         //events.emit('two-players');
     } // needs way to indicate 2 players
 

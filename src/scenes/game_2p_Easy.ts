@@ -1,7 +1,7 @@
 import Phaser, { Data } from "phaser";
 import { sharedInstance as events } from "../helpers/eventCenter";    // this is the shared events emitter
 
-export default class Players2 extends Phaser.Scene {
+export default class Game2PEasy extends Phaser.Scene {
 
 	private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
     private keys; 
@@ -13,8 +13,8 @@ export default class Players2 extends Phaser.Scene {
 
     private speed = 5;
     private normalSpeed = 5;
-    private turboSpeed = 10;
-    private shootSpeed = -15;
+    private turboSpeed = 20;
+    private shootSpeed = -20;
     private scrollSpeed = -1;
 
     private laserSound!: Phaser.Sound.BaseSound;
@@ -23,14 +23,13 @@ export default class Players2 extends Phaser.Scene {
     private backgroundMusic!: Phaser.Sound.BaseSound;
 
     constructor() {
-        super('players2');
+        super('2p_easy');
     }
 
     init() {
 		this.cursors = this.input.keyboard.createCursorKeys();  // setup keyboard input
         // load the other scenes
         // this.scene.launch('start');
-        this.scene.launch('levels')
         this.scene.launch('ui2');
         this.scene.launch('gameover');
     }
