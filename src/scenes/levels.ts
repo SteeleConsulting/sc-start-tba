@@ -13,7 +13,7 @@ export default class Levels extends Phaser.Scene {
     backButton;
 
     colorway = {
-        'bg' : 0x264653,
+        'bg' : 0x1D3557,
         'l1Button1' : 0xF4A261,
         'l1Button2' : 0xE76F51,
         'l2Button1' : 0xF4A261,

@@ -75,7 +75,7 @@ export default class StartScreen extends Phaser.Scene {
         // start text
         this.add.text(width / 2 - 225, height / 2 + 32, 'START GAME', {
             fontFamily: 'Righteous', fontSize: '70px', color : '#' + this.colorway['startText']
-        }).setInteractive().on('pointerdown', () => (this.selectLevels(), console.log('textclicked')));
+        }).setInteractive().on('pointerdown', () => (this.selectPlayers(), console.log('textclicked')));
 
         // logo text
         // this.add.text(30, height - 60, 'INSERT STEELE\n  LOGO HERE', {
@@ -106,9 +106,8 @@ export default class StartScreen extends Phaser.Scene {
     }
 
     // changes to levels screen
-    selectLevels(){
-        console.log('levels');
-        this.scene.start('levels');
+    selectPlayers(){
+        this.scene.start('players');
     }
 
     // create credit text box
