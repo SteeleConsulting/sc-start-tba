@@ -32,7 +32,6 @@ export default class StartScreen extends Phaser.Scene {
     // credBox = this.add.group();
 
     init() { 
-        this.scene.launch('levels');
     }
 
     preload(){
@@ -61,7 +60,7 @@ export default class StartScreen extends Phaser.Scene {
 
         // start button
         this.makeButton(width / 2 - 255, height / 2 + 5, 500, 120, this.colorway['startBack'], 15)
-        .setInteractive().on('pointerdown', () => (this.selectLevels(), console.log('boxclicked')));
+        // .setInteractive().on('pointerdown', () => (this.selectLevels(), console.log('boxclicked')));
 
         // title text
         this.add.text(width / 4, height / 2 - 200, 'GAME TITLE', {
