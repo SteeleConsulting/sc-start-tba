@@ -225,13 +225,14 @@ export default class Game1PHard extends Phaser.Scene {
         if (!this.spaceship?.active || !this.shieldVis?.active)   // This checks if the spaceship has been created yet
             return;
 
-        /*This does the boss health check, uncomment only when level repetition is complete
+        //This does the boss health check, uncomment only when level repetition is complete
         if(this.bossHealth <= 0){ //Checks to see if the boss is dead, if so, end level
             this.bossShip?.destroy();
             console.log('Level Complete!');
+            this.scene.start('gameover');
             return;
         }
-        */
+    
         //IF player reaches the boss section, it will run the boss phase and patterns
         if (this.cameras.main.scrollY <= 0 && this.bossHealth > 0) {
             //console.log("You have reached the final boss section" , this.tickCounter);

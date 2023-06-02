@@ -34,11 +34,11 @@ export default class GameOver extends Phaser.Scene{
             });
      
 
-        // events.on('victory', () => {
-        //     this.add.text(width / 6 - 10, height / 5, 'GAME OVER', {
-        //         fontFamily : 'Righteous', fontSize: '190px', color: 'white'
-        //     })
-        // })
+        events.on('victory', () => {
+             this.add.text(width / 6 - 10, height / 5, 'YOU WIN', {
+                fontFamily : 'Righteous', fontSize: '190px', color: 'white'
+             })
+        });
 
         this.makeButton(width * 5 / 12 - 40, height / 2 - 5, width / 5, height / 9, this.colorway['restart2'], 15)
         this.makeButton(width * 5 / 12 - 30, height / 2, width / 5, height / 9, this.colorway['restart1'], 15)

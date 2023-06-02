@@ -228,7 +228,15 @@ export default class Game2PEasy extends Phaser.Scene {
 
         if(!this.spaceship2?.active) 
             return;
-        
+          
+        /*
+        if(this.bossHealth <= 0){ //Checks to see if the boss is dead, if so, end level
+            this.bossShip?.destroy();
+            console.log('Level Complete!');
+            this.scene.start('gameover');
+            return;
+        }
+        */
         // move camera up
         // this.cameras.main  //look here at how to adjust the camera view 
         if(this.cameras.main.scrollY >= 0){
