@@ -369,6 +369,10 @@ export default class Game extends Phaser.Scene {
                 console.log("Boss health :", this.bossHealth);
                 spriteB.destroy();
             }
+            if (spriteA?.getData('type') == 'asteroid') {
+                console.log('Asteroid blocked laser');
+                spriteB.destroy();
+            }
 
         });
 
@@ -411,6 +415,10 @@ export default class Game extends Phaser.Scene {
                 }
                 this.explosionSound.play();
                 //events.emit('enemy-explode');
+            }
+            if (spriteA?.getData('type') == 'asteroid') {
+                console.log('Asteroid blocked enemy laser');
+                spriteB.destroy();
             }
 
         });
