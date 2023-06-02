@@ -27,7 +27,9 @@ export default class StartScreen extends Phaser.Scene {
 
     // credBox = this.add.group();
 
-    init() { }
+    init() { 
+        this.scene.launch('levels');
+    }
 
     preload(){
         const fonts = new WebFontFile(this.load, 'Quicksand')
@@ -49,17 +51,18 @@ export default class StartScreen extends Phaser.Scene {
 
         // start button
         this.makeButton(width / 2 - 255, height / 2 + 5, 500, 120, this.colorway['startBack'], 15)
-        .setInteractive().on('pointerdown', () => (this.selectPlayers(), console.log('boxclicked')));
+        .setInteractive().on('pointerdown', () => (this.selectLevels(), console.log('boxclicked')));
 
         // title text
         this.add.text(width / 2 - 285, height / 2 - 200, 'GAME TITLE', {
-            fontFamily : 'Quicksand', fontSize: '100px', color : '#' + this.colorway['titleText']
+            fontFamily : 'SuperMarioGalaxy', fontSize: '100px', color : '#' + this.colorway['titleText']
         })
+        
 
         // start text
         this.add.text(width / 2 - 225, height / 2 + 32, 'START GAME', {
             fontFamily: 'Quicksand', fontSize: '70px', color : '#' + this.colorway['startText']
-        }).setInteractive().on('pointerdown', () => (this.selectPlayers(), console.log('textclicked')));
+        }).setInteractive().on('pointerdown', () => (this.selectLevels(), console.log('textclicked')));
 
         // logo text
         this.add.text(30, height - 60, 'INSERT STEELE\n  LOGO HERE', {
@@ -88,9 +91,10 @@ export default class StartScreen extends Phaser.Scene {
         return button
     }
 
-    // changes to players screen
-    selectPlayers(){
-        this.scene.start('players')
+    // changes to levels screen
+    selectLevels(){
+        console.log('levels');
+        this.scene.start('levels');
     }
 
     // create credit text box

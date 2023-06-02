@@ -6,6 +6,8 @@ import GameOver from "./scenes/gameover"
 import Players from "./scenes/players";
 import Players2 from "./scenes/players2";
 import UI2 from "./scenes/ui2";
+import Game2 from "./scenes/game2";
+import Levels from "./scenes/levels";
 
 
 const config: Phaser.Types.Core.GameConfig = {
@@ -21,7 +23,7 @@ const config: Phaser.Types.Core.GameConfig = {
             }
         }
     },
-    scene: [StartScreen, Players, Game, Players2, UI, UI2, GameOver]   // this is the list of scenes to be used in the game, only the first scene is auto launched
+    scene: [StartScreen, Game,Levels, Game2, Players, Players2, UI, UI2, GameOver]   // this is the list of scenes to be used in the game, only the first scene is auto launched
 };
 
 

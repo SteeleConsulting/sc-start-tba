@@ -1,16 +1,16 @@
 import Phaser, { Data } from "phaser";
 import { sharedInstance as events } from "../helpers/eventCenter";    // this is the shared events emitter
 
-export default class Players2 extends Phaser.Scene {
+export default class Game2 extends Phaser.Scene {
 
 	private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
-    private keys; 
-
     private spaceship?: Phaser.Physics.Matter.Sprite;
-    private spaceship2?: Phaser.Physics.Matter.Sprite;
-    private upgraded: boolean = false;
     private bossShip? : Phaser.Physics.Matter.Sprite;
 
+    private upgraded: boolean = false;
+
+    private bossHealth = 50;
+    
     private speed = 5;
     private normalSpeed = 5;
     private turboSpeed = 10;
@@ -23,15 +23,17 @@ export default class Players2 extends Phaser.Scene {
     private backgroundMusic!: Phaser.Sound.BaseSound;
 
     constructor() {
-        super('players2');
+        super('game2');
     }
 
     init() {
 		this.cursors = this.input.keyboard.createCursorKeys();  // setup keyboard input
+
         // load the other scenes
         // this.scene.launch('start');
-        this.scene.launch('levels')
-        this.scene.launch('ui2');
+        this.scene.launch('ui');
+        //this.scene.launch('ui2');
+
         this.scene.launch('gameover');
     }
 
@@ -54,7 +56,6 @@ export default class Players2 extends Phaser.Scene {
     }
 
     create(){
-        this.keys = this.input.keyboard.addKeys('A,W,S,D');
         const { width, height } = this.scale;  // width and height of the scene
 
         // Add random stars background
@@ -76,13 +77,8 @@ export default class Players2 extends Phaser.Scene {
             switch(name){
                 case 'spawn':
                     this.cameras.main.scrollY = y-800;   // set camera to spaceship Y coordinates
-                    this.spaceship = this.matter.add.sprite(x + 700, y, 'space')
+                    this.spaceship = this.matter.add.sprite(x, y, 'space')
                         .play('spaceship-idle');
-                    /*
-                    this.spaceship.setCollisionGroup(1); 
-                    this.spaceship.setCollidesWith(3); 
-                    */
-                    
 
                     // configure collision detection
                     this.spaceship.setOnCollide((data: MatterJS.ICollisionPair) => {
@@ -99,58 +95,10 @@ export default class Players2 extends Phaser.Scene {
                             console.log('collided with speedup');
                             this.powerupSound.play();
                         }
-                        if (spriteA?.getData('type') == 'enemy1' || spriteA?.getData('type') == 'enemy2' || spriteA?.getData('type') == 'enemy3') {
-                            events.emit('collide-enemy');
-                            console.log('collided with enemy');
-                            this.explosionSound.play();
-                            
-                        }
-                        
-                        
                         if (spriteB?.getData('type') == 'enemy1' || spriteB?.getData('type') == 'enemy2' || spriteB?.getData('type') == 'enemy3') {
                             events.emit('collide-enemy');
                             console.log('collided with enemy');
-
-                            this.explosionSound.play();
-                            
-                        }
-                        
-                    });
-
-                    this.spaceship2 = this.matter.add.sprite(x, y, 'space')
-                        .play('spaceship-idle2');
-                    /*
-                    this.spaceship2.setCollisionGroup(2); 
-                    this.spaceship2.setCollidesWith(3)
-                    */
-
-                    // configure collision detection
-                    this.spaceship2.setOnCollide((data: MatterJS.ICollisionPair) => {
-                        const spriteA = (data.bodyA as MatterJS.BodyType).gameObject as Phaser.Physics.Matter.Sprite
-                        const spriteB = (data.bodyB as MatterJS.BodyType).gameObject as Phaser.Physics.Matter.Sprite
-                        console.log('collision detected');
-
-                        if (!spriteA?.getData || !spriteB?.getData)
-                            return;
-                        if (spriteA?.getData('type') == 'speedup') {
-                            console.log('collided with speedup');
-                            this.powerupSound.play();
-                        }
-                        if (spriteB?.getData('type') == 'speedup') {
-                            console.log('collided with speedup');
-                            this.powerupSound.play();
-                        }
-                        if (spriteA?.getData('type') == 'enemy1' || spriteA?.getData('type') == 'enemy2' || spriteA?.getData('type') == 'enemy3') {
-                            events.emit('collide-enemy');
-                            console.log('collided with enemy');
-                            this.explosionSound.play();
-                            
-                        }
-                        
-                        if (spriteB?.getData('type') == 'enemy1' || spriteB?.getData('type') == 'enemy2' || spriteB?.getData('type') == 'enemy3') {
-                            events.emit('collide-enemy');
-                            console.log('collided with enemy');
-
+                           
                             this.explosionSound.play();
                             
                         }
@@ -162,18 +110,29 @@ export default class Players2 extends Phaser.Scene {
                         isStatic: true,
                         isSensor: true
                     });
-                    speedup.setBounce(1);
+                    speedup.setBounce(2);
                     speedup.setData('type', 'speedup');
                     break;
-                /*
-                case 'enemy':
-                    const enemy = this.matter.add.sprite(x,y,'space','Enemies/enemyRed2.png',{
-                        isSensor:true
+                
+                case 'boss':
+                    this.bossShip = this.matter.add.sprite(x+300,y-100,'space','ufoYellow.png',{
+                        isSensor:true,
+                        
                     });
-                    enemy.setData('type','enemy');
-                    this.createEnemyAnimations();
+                    
+                    this.bossShip.setDisplaySize(500,500);
+                    this.bossShip.setOnCollide((data: MatterJS.ICollisionPair) => {
+                        const spriteA = (data.bodyA as MatterJS.BodyType).gameObject as Phaser.Physics.Matter.Sprite
+                        const spriteB = (data.bodyB as MatterJS.BodyType).gameObject as Phaser.Physics.Matter.Sprite
+
+                        if (!spriteA?.getData || !spriteB?.getData)
+                            return;
+                        if (spriteA == this.spaceship) {
+                            console.log('Touched player');
+                        }
+                    });
                     break;
-                */
+                
             }
         });
 
@@ -182,15 +141,13 @@ export default class Players2 extends Phaser.Scene {
         this.explosionSound = this.sound.add('explosion');
         this.laserSound = this.sound.add('laser'); 
         this.backgroundMusic = this.sound.add('pulsar');
+        events.emit('timeUpdated', this.time.now);
         
-        
+
     }
 
     update(){
         if (!this.spaceship?.active)   // This checks if the spaceship has been created yet
-            return;
-
-        if(!this.spaceship2?.active) 
             return;
         
         // move camera up
@@ -200,8 +157,7 @@ export default class Players2 extends Phaser.Scene {
             this.cameras.main.scrollY = this.cameras.main.scrollY + this.scrollSpeed;
             scrollDiff -= this.cameras.main.scrollY 
             //console.log(this.cameras.main.scrollY);//this is to debug the scroll
-            this.spaceship.setY(this.spaceship.y - scrollDiff) 
-            this.spaceship2.setY(this.spaceship2.y - scrollDiff) // sync scroll speed with ship speed
+            this.spaceship.setY(this.spaceship.y - scrollDiff) // sync scroll speed with ship speed
         }
         // Emit the time event with the current time value
         //events.emit('timeUpdated', this.time.now);
@@ -213,12 +169,12 @@ export default class Players2 extends Phaser.Scene {
         if (this.cursors.left.isDown){
             this.spaceship.setVelocityX(-this.speed);
             if (this.spaceship.x < 50) this.spaceship.setX(50);    // left boundry
-            //else this.cameras.main.scrollX = this.cameras.main.scrollX - 0.2
+            else this.cameras.main.scrollX = this.cameras.main.scrollX - 0.2
             this.spaceship.flipX = true;
         } else if (this.cursors.right.isDown){
             this.spaceship.setVelocityX(this.speed);
             if (this.spaceship.x > 1550) this.spaceship.setX(1550);    // right boundry 
-            //else this.cameras.main.scrollX = this.cameras.main.scrollX + 0.2
+            else this.cameras.main.scrollX = this.cameras.main.scrollX + 0.2
             this.spaceship.flipX = false;
         } else if (this.cursors.up.isDown){
             this.spaceship.setVelocityY(-this.speed)
@@ -233,36 +189,9 @@ export default class Players2 extends Phaser.Scene {
             this.spaceship.setVelocityY(0);
         }
 
-        if (this.keys.A.isDown){
-            this.spaceship2.setVelocityX(-this.speed);
-            if (this.spaceship2.x < 50) this.spaceship2.setX(50);    // left boundry
-            //else this.cameras.main.scrollX = this.cameras.main.scrollX - 0.2
-            this.spaceship2.flipX = true;
-        } 
-        else if (this.keys.D.isDown){
-            this.spaceship2.setVelocityX(this.speed);
-            if (this.spaceship2.x > 1550) this.spaceship2.setX(1550);    // right boundry 
-            //else this.cameras.main.scrollX = this.cameras.main.scrollX + 0.2
-            this.spaceship2.flipX = false;
-        } 
-        else if (this.keys.W.isDown){
-            this.spaceship2.setVelocityY(-this.speed)
-            if (this.spaceship2.y < this.cameras.main.scrollY + 110) this.spaceship2.setY(this.cameras.main.scrollY + 110);
-            this.spaceship2.flipY = false;
-        } 
-        else if (this.keys.S.isDown){
-            this.spaceship2.setVelocityY(this.speed)
-            if (this.spaceship2.y > this.cameras.main.scrollY +  965) this.spaceship2.setY(this.cameras.main.scrollY + 965);
-            this.spaceship2.flipY = false;
-        } 
-        else{
-            this.spaceship2.setVelocityX(0);
-            this.spaceship2.setVelocityY(0);
-        }
-
         //create enemies on a random number check
         if(Math.random()*100 >99.4 && this.cameras.main.scrollY >= 0){
-            this.createEnemy(Math.random()*1500,this.cameras.main.scrollY +90);
+                this.createEnemy(Math.random()*1500,this.cameras.main.scrollY +90);
         }
 
         //TODO: Add ability to hold down shift to attack continuously with a delay between shots
@@ -271,15 +200,11 @@ export default class Players2 extends Phaser.Scene {
         if(this.cursors.shift.isDown && shiftJustPressed ){
             this.createLaser(this.spaceship.x, this.spaceship.y - 50, 0, this.shootSpeed, Math.PI);
         }
-
-        const spaceJustPressed = Phaser.Input.Keyboard.JustDown(this.cursors.space);
-        if(this.cursors.space.isDown && spaceJustPressed ){
-            this.createLaser(this.spaceship2.x, this.spaceship2.y - 50, 0, this.shootSpeed, Math.PI);
-        }
         
     }
 
-    // create a laser sprite
+
+    // create a laser sprite for friendly ships
     createLaser(x: number, y: number, xSpeed: number, ySpeed:number, radians:number = 0){
         var laser = this.matter.add.sprite(x, y, 'space', 'Lasers/laserGreen08.png', { isSensor: true });
         this.upgraded;
@@ -295,12 +220,13 @@ export default class Players2 extends Phaser.Scene {
                 return;
             //detects all enemy types
             if (spriteA?.getData('type') == 'enemy1' || spriteA?.getData('type') == 'enemy2' || spriteA?.getData('type') == 'enemy3') {
-                if((spriteB?.getData('type') == 'enemy1')){
+               if((spriteA?.getData('type') == 'enemy1')){
                     events.emit('red-100');
-               }else if(spriteB?.getData('type') == 'enemy2'){
+               }
+               if(spriteA?.getData('type') == 'enemy2'){
                 events.emit('green-50');
 
-               }else{
+               }if(spriteA?.getData('type') == 'enemy3'){
                 events.emit('blue-150');
                }
                 console.log('laser collided with enemy');
@@ -309,13 +235,7 @@ export default class Players2 extends Phaser.Scene {
                 this.explosionSound.play();
                 
                 events.emit('enemy-explode');  
-                console.log('laser collided with enemy');
-                spriteA.destroy();
-                spriteB.destroy();
-                this.explosionSound.play();
-                
-                events.emit('enemy-explode');
-                
+
             }
 
         });
@@ -323,7 +243,7 @@ export default class Players2 extends Phaser.Scene {
         // destroy laser object after 500ms, otherwise lasers stay in memory and slow down the game
         setTimeout((laser) => laser.destroy(), 1000, laser);   
     }
-    
+
     //Creates enemy lasers that hurt the player
     createEnemyLaser(x: number, y: number, xSpeed: number, ySpeed:number, radians:number = 0){
         var laser = this.matter.add.sprite(x, y, 'space', 'Lasers/laserRed08.png', { isSensor: true });
@@ -346,6 +266,7 @@ export default class Players2 extends Phaser.Scene {
                 this.explosionSound.play();
                 
                 events.emit('enemy-explode');
+                
 
             }
 
@@ -374,9 +295,6 @@ export default class Players2 extends Phaser.Scene {
         });
         //sets enemy type to a specific type
         enemy.setData('type',('enemy'+result));
-
-        //enemy.setCollisionGroup(3); 
-        
         //sets behavior depending on time
         //below is behavior of blue enemy, zig zagging on screen
         if(enemy.getData('type') == 'enemy3'){
@@ -404,7 +322,6 @@ export default class Players2 extends Phaser.Scene {
             4000,enemy
             );
         }
-
         //below is the behavior of the green enemies, zoom forward
         else{
             enemy.setVelocityY(this.turboSpeed);
@@ -415,18 +332,11 @@ export default class Players2 extends Phaser.Scene {
         
     }
 
-
     private createSpaceshipAnimations(){
         this.anims.create({
             key: 'spaceship-idle',
             frames: [{key:'space', frame: 'playerShip1_blue.png'}]
         });
-
-        this.anims.create({
-            key: 'spaceship-idle2',
-            frames: [{key:'space', frame: 'playerShip1_red.png'}]
-        });
-
         this.anims.create({
             key: 'spaceship-explode',
             frameRate: 30,
