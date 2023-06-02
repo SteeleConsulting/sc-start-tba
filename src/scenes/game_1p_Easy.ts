@@ -55,11 +55,13 @@ export default class Game1PEasy extends Phaser.Scene {
         this.load.audio('laser', ['assets/sounds/laser.wav']);
         this.load.audio('explosion', ['assets/sounds/explosion.mp3']);
         this.load.audio('powerup', ['assets/sounds/powerup.wav']);
-        this.load.audio('neon', ['assets/sounds/neon-sky.mp3']);
+        this.load.audio('easy', ['assets/sounds/neon-gaming-128925.mp3']);
 
     }
 
     create() {
+        this.backgroundMusic = this.sound.add('easy');
+        this.backgroundMusic.play();
         const { width, height } = this.scale;  // width and height of the scene
 
         // Add random stars background
@@ -216,7 +218,6 @@ export default class Game1PEasy extends Phaser.Scene {
         this.powerupSound = this.sound.add('powerup');
         this.explosionSound = this.sound.add('explosion');
         this.laserSound = this.sound.add('laser');
-        this.backgroundMusic = this.sound.add('neon');
 
         events.emit('timeUpdated', this.time.now);
     }

@@ -3,8 +3,12 @@ import { sharedInstance as events, sharedInstance } from "../helpers/eventCenter
 import WebFontFile from "~/WebFontFile";
 
 export default class StartScreen extends Phaser.Scene {
+<<<<<<< Updated upstream
     private backgroundMusic!: Phaser.Sound.BaseSound;
 
+=======
+    
+>>>>>>> Stashed changes
     constructor() {
         super('start');
     }
@@ -32,9 +36,13 @@ export default class StartScreen extends Phaser.Scene {
     init() {
     }
 
+<<<<<<< Updated upstream
     preload() {
         this.load.audio('neon', ['assets/sounds/neon-sky.mp3']);
 
+=======
+    preload(){
+>>>>>>> Stashed changes
         const fonts = new WebFontFile(this.load, 'Righteous')
         this.load.addFile(fonts)
 
@@ -49,8 +57,6 @@ export default class StartScreen extends Phaser.Scene {
 
 
     create() {
-        this.backgroundMusic = this.sound.add('neon');
-        this.backgroundMusic.play();
         const { width, height } = this.scale;
 
         // back of start button

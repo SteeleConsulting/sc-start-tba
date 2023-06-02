@@ -185,6 +185,7 @@ export default class UI2 extends Phaser.Scene {
         this.scene.pause('1p_easy').pause('1p_hard')
             .pause('2p_easy').pause('2p_hard')
 
+<<<<<<< Updated upstream
         pauseMenu.add(this.makeButton(width * 3 / 8 - 20, height * 3 / 7 + 45, 500, 120, this.colorway['restart2'], 15))
         pauseMenu.add(this.makeButton(width * 3 / 8 - 10, height * 3 / 7 + 50, 500, 120, this.colorway['restart1'], 15))
 
@@ -224,5 +225,41 @@ export default class UI2 extends Phaser.Scene {
         this.endTrigger = false
         this.scene.launch('gameover')
     }
+=======
+            pauseMenu.add(this.makeButton(width * 3 / 8 - 20, height * 3 / 7 + 45, 500, 120, this.colorway['restart2'], 15))
+            pauseMenu.add(this.makeButton(width * 3 / 8 - 10, height * 3 / 7 + 50, 500, 120, this.colorway['restart1'], 15))
+    
+            pauseMenu.add(this.makeButton(width * 3 / 8 - 20, height * 5 / 7 - 40, 500, 120, this.colorway['start2'], 15))
+            pauseMenu.add(this.makeButton(width * 3 / 8 - 10, height * 5 / 7 - 35, 500, 120, this.colorway['start1'], 15))
+    
+    
+            pauseMenu.add(this.add.text(width * 2 / 9 - 5, height / 6, 'GAME PAUSED', {
+                fontFamily : 'Righteous', fontStyle : 'bold', fontSize: '140px', color : '#' + this.colorway['pauseText']
+            }))
+    
+            pauseMenu.add(this.add.text(width * 2 / 5 + 5, height * 3 / 7 + 75 , 'RESUME GAME', {
+                fontFamily : 'Righteous', fontSize: '55px', color : '#' + this.colorway['pauseButtonText']
+            }).setInteractive().on('pointerdown', () => {this.hidePauseMenu(pauseMenu)}))
+            
+            pauseMenu.add(this.add.text(width * 2 / 5 - 35, height * 5 / 7 - 10, 'RETURN TO MENU', {
+                fontFamily : 'Righteous', fontSize: '55px', color : '#' + this.colorway['pauseButtonText']
+            }).setInteractive().on('pointerdown', () => {this.returnStart(pauseMenu)}))
+
+    
+        }
+    
+        hidePauseMenu(pauseMenu) {
+            console.log('hide');
+            pauseMenu.destroy(true)       
+            this.scene.resume('1p_easy').resume('1p_hard')
+            .resume('2p_easy').resume('2p_hard')
+        }
+    
+        returnStart(pauseMenu){
+            pauseMenu.destroy(true)
+            this.scene.stop('1p_easy').stop('2p_easy')
+            .stop('1p_hard').stop('2p_hard').start('start')
+        }
+>>>>>>> Stashed changes
 
 }

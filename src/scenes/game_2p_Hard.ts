@@ -62,10 +62,13 @@ export default class Game2PHard extends Phaser.Scene {
         this.load.audio('explosion', ['assets/sounds/explosion.mp3']);
         this.load.audio('powerup', ['assets/sounds/powerup.wav']);
         this.load.audio('pulsar', ['assets/sounds/pulsar-office.mp3']);
+        this.load.audio('hard', ['assets/sounds/stay-retro-124958.mp3']);
 
     }
 
     create() {
+        this.backgroundMusic = this.sound.add('hard');
+        this.backgroundMusic.play();
         this.keys = this.input.keyboard.addKeys('A,W,S,D');
         const { width, height } = this.scale;  // width and height of the scene
 
@@ -348,7 +351,6 @@ export default class Game2PHard extends Phaser.Scene {
         this.powerupSound = this.sound.add('powerup');
         this.explosionSound = this.sound.add('explosion');
         this.laserSound = this.sound.add('laser');
-        this.backgroundMusic = this.sound.add('pulsar');
 
         events.emit('timeUpdated', this.time.now);
     }
