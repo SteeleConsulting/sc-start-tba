@@ -12,7 +12,7 @@ export default class Game1PHard extends Phaser.Scene {
     private spaceshipZoom = 1;//stackable speed power up
 
     private upgraded: boolean = false;
-    private bossHealth = 30;
+    private bossHealth = 50;//Hard Difficulty change: Boss now has 50 health
     private bossDirection = false;//false means left, true means right
 
     private speed = 5;
@@ -208,6 +208,19 @@ export default class Game1PHard extends Phaser.Scene {
                     this.bossShip.setDisplaySize(500, 500);
 
                     break;
+                //Hard Difficulty change: added asteroids on spawn
+                case 'asteroid':
+                    const asteroid = this.matter.add.sprite(x+50, y, 'space', 'Meteors/meteorGrey_big4.png', {
+                        isStatic: true,
+                        isSensor: true
+                    });
+                    const asteroid2 = this.matter.add.sprite(x+1000, y, 'space', 'Meteors/meteorGrey_big4.png', {
+                        isStatic: true,
+                        isSensor: true
+                    });
+                    asteroid.setData('type','asteroid');
+                    asteroid2.setData('type','asteroid');
+                    break;
 
             }
         });
@@ -233,19 +246,21 @@ export default class Game1PHard extends Phaser.Scene {
         }
         */
         //IF player reaches the boss section, it will run the boss phase and patterns
+        //Hard difficulty change: Boss will shoot more sparatic in tick counters,
+        //boss will move faster the less health is has
         if (this.cameras.main.scrollY <= 0 && this.bossHealth > 0) {
             //console.log("You have reached the final boss section" , this.tickCounter);
             if (!this.bossShip?.active)   // This checks if the bossShip has been created yet
                 this.bossHealth = 0;
             //insert interval method for boss phase
-            else if (this.tickCounter == 50 || this.tickCounter == 150) {
+            else if (this.tickCounter == 40 || this.tickCounter == 80) {
                 //console.log("Boss shoots triple laser");
                 this.createEnemyLaser(this.bossShip.x, this.bossShip.y + 250, -10, -this.turboSpeed, Math.PI);
                 this.createEnemyLaser(this.bossShip.x, this.bossShip.y + 250, 0, -this.turboSpeed, Math.PI);
                 this.createEnemyLaser(this.bossShip.x, this.bossShip.y + 250, 10, -this.turboSpeed, Math.PI);
                 this.tickCounter++;
             }
-            else if (this.tickCounter == 100) {
+            else if (this.tickCounter == 120 || this.tickCounter == 160) {
                 //console.log("Boss shoots quad laser");
                 this.createEnemyLaser(this.bossShip.x, this.bossShip.y + 250, -15, -this.turboSpeed, Math.PI);
                 this.createEnemyLaser(this.bossShip.x, this.bossShip.y + 250, -5, -this.turboSpeed, Math.PI);
@@ -268,7 +283,7 @@ export default class Game1PHard extends Phaser.Scene {
                 this.tickCounter++;
             }
             if (this.bossShip?.active) {
-                this.bossMovement(this.bossShip.x, ((30 - this.bossHealth) / 3) * 2);
+                this.bossMovement(this.bossShip.x, ((50 - this.bossHealth) / 3) * 2);
             }
         }
 
@@ -316,7 +331,8 @@ export default class Game1PHard extends Phaser.Scene {
         this.shieldVis.y = this.spaceship.y;
 
         //create enemies on a random number check
-        if (Math.random() * 100 > 99.4 && this.cameras.main.scrollY >= 0) {
+        //Hard Difficulty change: Enemies now spawn more frequently
+        if (Math.random() * 100 > 98.0 && this.cameras.main.scrollY >= 0) {
             this.createEnemy(Math.random() * 1500, this.cameras.main.scrollY + 90);
         }
 
