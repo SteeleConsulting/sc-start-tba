@@ -125,8 +125,12 @@ export default class UI extends Phaser.Scene {
                 if(this.livesLeft>0){
                     this.livesLeft --;
                     this.livesLabel.text = 'Lives: ' + this.livesLeft;
+
                 }else{
-                    events.emit('gameover');
+
+                    console.log('went into game over');
+                    this.scene.start('gameover')
+                    
                 }    
         });
         //increases life
@@ -134,6 +138,14 @@ export default class UI extends Phaser.Scene {
             this.livesLeft++;
             this.livesLabel.text = 'Lives: ' + this.livesLeft;
         });
+        /*
+        events.on('gameover', () => {
+            console.log('gameover')
+            this.add.text(width / 6 - 10, height / 5, 'GAME OVER', {
+                fontFamily : 'Righteous', fontSize: '190px', color: 'white'
+            });
+        });
+        */
        
 
         

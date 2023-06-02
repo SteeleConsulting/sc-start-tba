@@ -15,8 +15,8 @@ export default class UI2 extends Phaser.Scene {
     private sc1Collected: number = 0;
     
     //private timeLabel!: Phaser.GameObjects.Text;
-    private l1!: Phaser.GameObjects.Text;
-    private l1Left: number = 1;
+    private lives!: Phaser.GameObjects.Text;
+    private livesLeft: number = 1;
     private l2!: Phaser.GameObjects.Text;
     private l2Left: number = 0;
     private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
@@ -123,7 +123,7 @@ export default class UI2 extends Phaser.Scene {
 
        // LIVES 
       
-        this.l1 = this.add.text(10, 18, 'L1: 1', {
+        this.lives = this.add.text(10, 18, 'L1: 1', {
             fontFamily : 'Righteous', fontSize: '32px', color: '#' + this.colorway['UIText']
         });
         /*
@@ -137,12 +137,18 @@ export default class UI2 extends Phaser.Scene {
         // lives left when collide with enemy 
         // LIVES 1 
         events.on('collide-enemy', () => {
-                if(this.l1Left>0){
-                    this.l1Left --;
-                    this.l1.text = 'L1: ' + this.l1Left;
+                if(this.livesLeft>0){
+                    this.livesLeft --;
+                    this.lives.text = 'L1: ' + this.livesLeft;
                 }else{
+                    this.scene.start('gameover');
                     events.emit('gameover');
                 }    
+        });
+        //increases life
+        events.on('life-up',() => {
+            this.livesLeft++;
+            this.lives.text = 'Lives: ' + this.livesLeft;
         });
         
        
