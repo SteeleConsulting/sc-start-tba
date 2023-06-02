@@ -56,7 +56,11 @@ export default class Levels1 extends Phaser.Scene {
         this.makeButton(width / 3, height / 4 + 110, width / 3, height / 8, this.colorway['l1Button1'], 15)
         this.makeButton(width / 3 + 10, height / 4 + 115, width / 3, height / 8, this.colorway['l1Button2'], 15)
 
+<<<<<<< Updated upstream
         this.add.text(width / 2 - 120, height / 4 + 135, 'Level 1 ', {
+=======
+        this.add.text(width / 3 + 100, height / 4 + 135, 'EASY ', {
+>>>>>>> Stashed changes
             fontFamily: 'Righteous', fontSize: '80px', color: '#' + this.colorway['l1Text']
         }).setInteractive().on('pointerdown', () => (this.l1Game()))
 
@@ -64,8 +68,13 @@ export default class Levels1 extends Phaser.Scene {
         this.makeButton(width / 3, height / 2 + 130, width / 3, height / 8, this.colorway['l2Button1'], 15)
         this.makeButton(width / 3 + 10, height / 2 + 135, width / 3, height / 8, this.colorway['l2Button2'], 15)
 
+<<<<<<< Updated upstream
         this.add.text(width / 2 - 120, height / 2 + 155, 'Level 2', {
             fontFamily: 'Righteous', fontSize: '80px', color: '#' + this.colorway['l2Text']
+=======
+        var p2Text = this.add.text(width / 3 + 65, height / 2 + 155, 'HARD', {
+            fontFamily: 'Righteous', fontSize: '80px', color: this.colorway['l2Text']
+>>>>>>> Stashed changes
         }).setInteractive().on('pointerdown', () => (this.l2Game()))
 
         // back button
