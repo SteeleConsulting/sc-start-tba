@@ -2,6 +2,8 @@
 // Most updated at 8:57
 import Phaser, { NONE, Physics } from "phaser";
 import { sharedInstance as events } from "../helpers/eventCenter";
+import WebFontFile from "~/WebFontFile";
+
 
 
 
@@ -17,9 +19,7 @@ export default class UI2 extends Phaser.Scene {
     private l1Left: number = 1;
     private l2!: Phaser.GameObjects.Text;
     private l2Left: number = 0;
-    
-    graphics;
-    
+
 
     constructor() {
         super('ui2');
@@ -29,6 +29,9 @@ export default class UI2 extends Phaser.Scene {
     }
 
     preload(){
+        const fonts = new WebFontFile(this.load, 'Righteous')
+		this.load.addFile(fonts)
+
         this.load.image('life', 'UI/playerLife1_blue.png');
         this.load.atlas('space', 'assets/space-shooter/space-shooter-tileset.png', 'assets/space-shooter/space-shooter-tileset.json');  
         
@@ -55,7 +58,7 @@ export default class UI2 extends Phaser.Scene {
 
 
         this.powerupsLabel = this.add.text(1000, 18, 'PowerUps: 0', {
-            fontSize: '32px', color: 'yellow'
+            fontFamily : 'Righteous', fontSize: '32px', color: 'yellow'
 
         });
 
@@ -68,7 +71,7 @@ export default class UI2 extends Phaser.Scene {
         })
         // SCORE LABELS 
         this.sc1 = this.add.text(300, 18, 'SC1: 0', {
-            fontSize: '32px', color: 'yellow'
+            fontFamily : 'Righteous', fontSize: '32px', color: 'yellow'
         });
         
 
@@ -96,7 +99,7 @@ export default class UI2 extends Phaser.Scene {
        // LIVES 
       
         this.l1 = this.add.text(10, 18, 'L1: 1', {
-            fontSize: '32px', color: 'yellow'
+            fontFamily : 'Righteous', fontSize: '32px', color: 'yellow'
         });
         /*
         this.l2 = this.add.text(150, 18, 'L2: 0', {

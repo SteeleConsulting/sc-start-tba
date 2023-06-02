@@ -2,6 +2,8 @@
 // Most updated at 8:57
 import Phaser, { NONE, Physics } from "phaser";
 import { sharedInstance as events } from "../helpers/eventCenter";
+import WebFontFile from "~/WebFontFile";
+
 
 
 
@@ -13,9 +15,7 @@ export default class UI extends Phaser.Scene {
     private scoreCollected: number = 0;
     private livesLabel!: Phaser.GameObjects.Text;
     private livesLeft: number = 3;
-    
-    
-    graphics;
+
     
 
 
@@ -33,6 +33,9 @@ export default class UI extends Phaser.Scene {
     }
 
     preload(){
+        const fonts = new WebFontFile(this.load, 'Righteous')
+		this.load.addFile(fonts)
+
         this.load.image('life', 'UI/playerLife1_blue.png');
         this.load.atlas('space', 'assets/space-shooter/space-shooter-tileset.png', 'assets/space-shooter/space-shooter-tileset.json');  
     }
@@ -58,7 +61,7 @@ export default class UI extends Phaser.Scene {
 
 
         this.powerupsLabel = this.add.text(1000, 18, 'PowerUps: 0', {
-            fontSize: '32px', color: 'yellow'
+            fontFamily : 'Righteous', fontSize: '32px', color: 'yellow'
 
         });
 
@@ -70,7 +73,7 @@ export default class UI extends Phaser.Scene {
             
         })
         this.scoreLabel = this.add.text(300, 18, 'Score: 0', {
-            fontSize: '32px', color: 'yellow'
+            fontFamily : 'Righteous', fontSize: '32px', color: 'yellow'
         });
         
         // Listen to the 'timeUpdated' event
@@ -93,7 +96,7 @@ export default class UI extends Phaser.Scene {
        // LIVES 
         
         this.livesLabel = this.add.text(20, 18, 'Lives: 3', {
-            fontSize: '32px', color: 'yellow'
+            fontFamily : 'Righteous', fontSize: '32px', color: 'yellow'
         });
         
         

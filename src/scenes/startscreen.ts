@@ -34,7 +34,7 @@ export default class StartScreen extends Phaser.Scene {
     preload(){
         this.load.audio('neon', ['assets/sounds/neon-sky.mp3']);
 
-        const fonts = new WebFontFile(this.load, 'Quicksand')
+        const fonts = new WebFontFile(this.load, 'Righteous')
 		this.load.addFile(fonts)
 
         this.load.image('logo', './assets/TBALogo.png');
@@ -61,30 +61,30 @@ export default class StartScreen extends Phaser.Scene {
 
         // title text
         this.add.text(width / 4, height / 2 - 200, 'GAME TITLE', {
-            fontFamily : 'Quicksand', fontStyle : 'bold', fontSize: '135px', color : '#' + this.colorway['titleText']
+            fontFamily : 'Righteous', fontStyle : 'bold', fontSize: '135px', color : '#' + this.colorway['titleText']
         })
 
         // this.add.text(width / 2 - 145, height / 2 - 75, 'A Game by TBA', {
-        //     fontFamily : 'Quicksand', fontSize : '35px', color : '#' + this.colorway['titleText']
+        //     fontFamily : 'Righteous', fontSize : '35px', color : '#' + this.colorway['titleText']
         // })
 
         // start text
         this.add.text(width / 2 - 225, height / 2 + 32, 'START GAME', {
-            fontFamily: 'Quicksand', fontSize: '70px', color : '#' + this.colorway['startText']
+            fontFamily: 'Righteous', fontSize: '70px', color : '#' + this.colorway['startText']
         }).setInteractive().on('pointerdown', () => (this.selectPlayers(), console.log('textclicked')));
 
         // logo text
         // this.add.text(30, height - 60, 'INSERT STEELE\n  LOGO HERE', {
-        //     fontFamily: 'Quicksand', color : '#' + this.colorway['logoText']
+        //     fontFamily: 'Righteous', color : '#' + this.colorway['logoText']
         // })
-        this.add.sprite(70, height - 60, 'logo').setScale(0.06, 0.06)
+        this.add.sprite(70, height - 60, 'logo')
 
         // credit link
         this.makeButton(width - 210, height - 85, width / 9, height / 15, this.colorway['credButton1'], 15)
         this.makeButton(width - 200, height - 80, width / 9, height / 15, this.colorway['credButton2'], 15)
 
         this.add.text(width - 170, height - 65, 'CREDITS', {
-            fontFamily : 'Quicksand', fontSize: '30px', color : '#' + this.colorway['credLinkText']
+            fontFamily : 'Righteous', fontSize: '30px', color : '#' + this.colorway['credLinkText']
         }).setInteractive().on('pointerdown', () => (this.openCredits()))
     }
 
@@ -122,14 +122,14 @@ export default class StartScreen extends Phaser.Scene {
             + '\n\t \tBianka Boudreaux' 
             + '\n\t \tGabriela Sigala Acosta' 
             + '\n\t \tIsmael Parra'
-            + '\n\t \tAlexander Cabos', {fontFamily : 'Quicksand', fontSize : '40px', color : '#' + this.colorway['credText']}))
+            + '\n\t \tAlexander Cabos', {fontFamily : 'Righteous', fontSize : '40px', color : '#' + this.colorway['credText']}))
 
 
         credBox.add(this.makeButton(width / 2 - 145, height / 2 + 120, width / 6, height / 12, this.colorway['backButton'], 15))
         credBox.add(this.makeButton(width / 2 - 140, height / 2 + 125, width / 6, height / 12, this.colorway['backButton2'], 15))
 
         credBox.add(this.add.text(width / 2 - 105, height / 2 + 150, 'Back to Menu', {
-            fontFamily : 'Quicksand', fontSize : '30px', color : '#' + this.colorway['backText']
+            fontFamily : 'Righteous', fontSize : '30px', color : '#' + this.colorway['backText']
         }).setInteractive().on('pointerdown', () => this.hideCredBox(credBox)))
         
     }
