@@ -13,8 +13,8 @@ export default class Game2 extends Phaser.Scene {
     
     private speed = 5;
     private normalSpeed = 5;
-    private turboSpeed = 10;
-    private shootSpeed = -15;
+    private turboSpeed = 20;
+    private shootSpeed = -20;
     private scrollSpeed = -1;
 
     private laserSound!: Phaser.Sound.BaseSound;
