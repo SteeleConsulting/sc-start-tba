@@ -1,7 +1,7 @@
 import Phaser, { Data } from "phaser";
 import { sharedInstance as events } from "../helpers/eventCenter";    // this is the shared events emitter
 
-export default class Game2PEasy extends Phaser.Scene {
+export default class Game2PHard extends Phaser.Scene {
 
     private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
     private keys;
@@ -36,7 +36,7 @@ export default class Game2PEasy extends Phaser.Scene {
     private backgroundMusic!: Phaser.Sound.BaseSound;
 
     constructor() {
-        super('2p_easy');
+        super('2p_hard');
     }
 
     init() {
@@ -90,11 +90,11 @@ export default class Game2PEasy extends Phaser.Scene {
                     this.cameras.main.scrollY = y - 800;   // set camera to spaceship Y coordinates
                     this.spaceship = this.matter.add.sprite(x + 700, y, 'space')
                         .play('spaceship-idle');
-                    
+
                     //makes invisible shield, will only appear if there is a shield
-                    this.shieldVis1 = this.matter.add.sprite(x,y,'space','Effects/shield1.png');
+                    this.shieldVis1 = this.matter.add.sprite(x, y, 'space', 'Effects/shield1.png');
                     this.shieldVis1.visible = false;
-                    this.shieldVis1.setCollisionGroup(1); 
+                    this.shieldVis1.setCollisionGroup(1);
                     this.shieldVis1.setCollidesWith(0);
 
                     // This was for to prevent from players colliding
@@ -198,11 +198,11 @@ export default class Game2PEasy extends Phaser.Scene {
 
                     this.spaceship2 = this.matter.add.sprite(x, y, 'space')
                         .play('spaceship-idle2');
-                    
+
                     //makes invisible shield, will only appear if there is a shield
-                    this.shieldVis2 = this.matter.add.sprite(x,y,'space','Effects/shield1.png');
+                    this.shieldVis2 = this.matter.add.sprite(x, y, 'space', 'Effects/shield1.png');
                     this.shieldVis2.visible = false;
-                    this.shieldVis2.setCollisionGroup(1); 
+                    this.shieldVis2.setCollisionGroup(1);
                     this.shieldVis2.setCollidesWith(0);
 
                     // configure collision detection
@@ -288,7 +288,7 @@ export default class Game2PEasy extends Phaser.Scene {
                             this.explosionSound.play();
                         }
                     });
-     
+
                     break;
                 case 'speedup':
                     const speedup = this.matter.add.sprite(x + 20, y, 'space', 'Power-ups/bolt_gold.png', {
@@ -344,7 +344,7 @@ export default class Game2PEasy extends Phaser.Scene {
         if (!this.spaceship?.active || !this.shieldVis1?.active)   // This checks if the spaceship has been created yet
             return;
 
-        if (!this.spaceship2?.active || !this.shieldVis2?.active) 
+        if (!this.spaceship2?.active || !this.shieldVis2?.active)
             return;
 
         /*This does the boss health check, uncomment only when level repetition is complete
@@ -439,24 +439,24 @@ export default class Game2PEasy extends Phaser.Scene {
         this.shieldVis1.y = this.spaceship.y;
 
         if (this.keys.A.isDown) {
-            this.spaceship2.setVelocityX(-this.speed* this.spaceshipZoom2);
+            this.spaceship2.setVelocityX(-this.speed * this.spaceshipZoom2);
             if (this.spaceship2.x < 50) this.spaceship2.setX(50);    // left boundry
             else this.cameras.main.scrollX = this.cameras.main.scrollX - 0.2
             this.spaceship2.flipX = true;
         }
         else if (this.keys.D.isDown) {
-            this.spaceship2.setVelocityX(this.speed* this.spaceshipZoom2);
+            this.spaceship2.setVelocityX(this.speed * this.spaceshipZoom2);
             if (this.spaceship2.x > 1550) this.spaceship2.setX(1550);    // right boundry 
             else this.cameras.main.scrollX = this.cameras.main.scrollX + 0.2
             this.spaceship2.flipX = false;
         }
         else if (this.keys.W.isDown) {
-            this.spaceship2.setVelocityY(-this.speed* this.spaceshipZoom2); 
+            this.spaceship2.setVelocityY(-this.speed * this.spaceshipZoom2);
             if (this.spaceship2.y < this.cameras.main.scrollY + 110) this.spaceship2.setY(this.cameras.main.scrollY + 110);
             this.spaceship2.flipY = false;
         }
         else if (this.keys.S.isDown) {
-            this.spaceship2.setVelocityY(this.speed* this.spaceshipZoom2); 
+            this.spaceship2.setVelocityY(this.speed * this.spaceshipZoom2);
             if (this.spaceship2.y > this.cameras.main.scrollY + 965) this.spaceship2.setY(this.cameras.main.scrollY + 965);
             this.spaceship2.flipY = false;
         }

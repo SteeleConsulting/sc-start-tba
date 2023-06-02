@@ -9,7 +9,7 @@ import Levels2 from "./scenes/levels2";
 import Game1PEasy from "./scenes/game_1p_Easy";
 import Game2PEasy from "./scenes/game_2p_Easy";
 import Game1PHard from "./scenes/game_1p_Hard";
-import Game2PHard from "./scenes/game_2p_Hard copy";
+import Game2PHard from "./scenes/game_2p_Hard";
 
 
 const config: Phaser.Types.Core.GameConfig = {
@@ -25,7 +25,7 @@ const config: Phaser.Types.Core.GameConfig = {
             }
         }
     },
-    scene: [StartScreen, PlayerSelect, Levels1, Levels2, Game1PEasy, Game2PEasy, Game1PHard, Game2PHard, UI, UI2 GameOver]   // this is the list of scenes to be used in the game, only the first scene is auto launched
+    scene: [StartScreen, PlayerSelect, Levels1, Levels2, Game1PEasy, Game2PEasy, Game1PHard, Game2PHard, UI, UI2, GameOver]   // this is the list of scenes to be used in the game, only the first scene is auto launched
 };
 
 
