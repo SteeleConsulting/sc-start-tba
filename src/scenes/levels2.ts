@@ -7,10 +7,6 @@ export default class Levels2 extends Phaser.Scene {
         super('levels2');
     }
 
-    bg;
-    l1Button;
-    l2Button;
-    backButton;
 
     colorway = {
         'bg': 0x1D3557,
@@ -39,7 +35,7 @@ export default class Levels2 extends Phaser.Scene {
         const { width, height } = this.scale;
 
         var bgRect = new Phaser.Geom.Rectangle(0, 0, width, height)
-        var bg = this.add.graphics({ fillStyle: { color: 0x14213D } })
+        var bg = this.add.graphics({ fillStyle: { color : this.colorway['bg'] } })
         bg.fillRoundedRect(bgRect.x, bgRect.y, bgRect.width, bgRect.height, 0);
 
     }
@@ -48,7 +44,7 @@ export default class Levels2 extends Phaser.Scene {
         const { width, height } = this.scale
 
         // page title
-        this.add.text(width / 6, height / 5, 'SELECT LEVEL', {
+        this.add.text(width / 3, height / 5, 'SELECT LEVEL', {
             fontFamily: 'Righteous', fontSize: '80px', color: '#' + this.colorway['levelTitle']
         })
 
@@ -56,7 +52,7 @@ export default class Levels2 extends Phaser.Scene {
         this.makeButton(width / 3, height / 4 + 110, width / 3, height / 8, this.colorway['l1Button1'], 15)
         this.makeButton(width / 3 + 10, height / 4 + 115, width / 3, height / 8, this.colorway['l1Button2'], 15)
 
-        this.add.text(width / 3 + 100, height / 4 + 135, 'Level 1 ', {
+        this.add.text(width / 2 - 120, height / 4 + 135, 'Level 1 ', {
             fontFamily: 'Righteous', fontSize: '80px', color: '#' + this.colorway['l1Text']
         }).setInteractive().on('pointerdown', () => (this.l1Game()))
 
@@ -64,8 +60,8 @@ export default class Levels2 extends Phaser.Scene {
         this.makeButton(width / 3, height / 2 + 130, width / 3, height / 8, this.colorway['l2Button1'], 15)
         this.makeButton(width / 3 + 10, height / 2 + 135, width / 3, height / 8, this.colorway['l2Button2'], 15)
 
-        var p2Text = this.add.text(width / 3 + 65, height / 2 + 155, 'Level 2', {
-            fontFamily: 'Righteous', fontSize: '80px', color: this.colorway['l2Text']
+        this.add.text(width / 2 - 120, height / 2 + 155, 'Level 2', {
+            fontFamily: 'Righteous', fontSize: '80px', color: '#' + this.colorway['l2Text']
         }).setInteractive().on('pointerdown', () => (this.l2Game()))
 
         // back button
@@ -74,7 +70,7 @@ export default class Levels2 extends Phaser.Scene {
 
         this.add.text(width * 5 / 6 + 45, height * 6 / 7 + 15, 'BACK', {
             fontFamily: 'Righteous', fontSize: '40px', color: '#' + this.colorway['backText']
-        }).setInteractive().on('pointerdown', () => (this.backButton()))
+        }).setInteractive().on('pointerdown', () => (this.goBack()))
     }
 
     update() { }
@@ -87,9 +83,7 @@ export default class Levels2 extends Phaser.Scene {
         button.fillRoundedRect(rect.x, rect.y, rect.width, rect.height, curve)
         return button
     }
-    selectPlayers() {
-        this.scene.start('players')
-    }
+
 
     l1Game() {
         this.scene.start('2p_easy')
@@ -99,6 +93,6 @@ export default class Levels2 extends Phaser.Scene {
     }
 
     goBack() {
-        this.scene.start('start')
+        this.scene.start('player_select')
     }
 }
