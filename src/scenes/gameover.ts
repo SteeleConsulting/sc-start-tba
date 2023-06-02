@@ -97,6 +97,6 @@ export default class GameOver extends Phaser.Scene {
 
     backToStart() {
         this.scene.stop('1p_easy').stop('2p_easy')
-            .stop('1p_hard').stop('2p_hard').start('start')
+            .stop('1p_hard').stop('2p_hard').stop('ui').stop('ui2').start('start')
     }
 }

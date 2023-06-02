@@ -38,6 +38,7 @@ export default class StartScreen extends Phaser.Scene {
 
 <<<<<<< Updated upstream
     preload() {
+        this.scene.stop('ui').stop('ui2')
         this.load.audio('neon', ['assets/sounds/neon-sky.mp3']);
 
 =======
