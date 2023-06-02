@@ -8,8 +8,8 @@ export default class UI2 extends Phaser.Scene {
 
     private shieldsLabel!: Phaser.GameObjects.Text;
     private shieldsCollected: number = 0;
-    private sc1!: Phaser.GameObjects.Text;
-    private sc1Collected: number = 0;
+    private score!: Phaser.GameObjects.Text;
+    private scoreCollected: number = 0;
 
     //private timeLabel!: Phaser.GameObjects.Text;
     private lives!: Phaser.GameObjects.Text;
@@ -99,7 +99,7 @@ export default class UI2 extends Phaser.Scene {
             
         })
         // SCORE LABELS 
-        this.sc1 = this.add.text(300, 18, 'SC1: 0', {
+        this.score = this.add.text(300, 18, 'Score: 0', {
             fontFamily: 'Righteous', fontSize: '32px', color: '#' + this.colorway['UIText']
         });
 
@@ -110,16 +110,16 @@ export default class UI2 extends Phaser.Scene {
         // SCORE PLAYER 1
 
         events.on('green-50', () => {
-            this.sc1Collected += 50;
-            this.sc1.text = 'Score: ' + this.sc1Collected;
+            this.scoreCollected += 50;
+            this.score.text = 'Score: ' + this.scoreCollected;
         });
         events.on('red-100', () => {
-            this.sc1Collected += 100;
-            this.sc1.text = 'Score: ' + this.sc1Collected;
+            this.scoreCollected += 100;
+            this.score.text = 'Score: ' + this.scoreCollected;
         });
         events.on('blue-150', () => {
-            this.sc1Collected += 150;
-            this.sc1.text = 'Score: ' + this.sc1Collected;
+            this.scoreCollected += 150;
+            this.score.text = 'Score: ' + this.scoreCollected;
         });
 
 

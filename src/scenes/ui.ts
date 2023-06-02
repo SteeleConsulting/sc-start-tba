@@ -84,7 +84,7 @@ export default class UI extends Phaser.Scene {
             fontFamily: 'Righteous', fontStyle: 'bolder', fontSize: '40px', color: '#' + this.colorway['pause']
         }).setInteractive().on('pointerdown', () => { if (!this.scene.isPaused('game')) this.pauseGame() })
 
-        this.shieldsLabel = this.add.text(1000, 18, 'PowerUps: 0', {
+        this.shieldsLabel = this.add.text(1000, 18, 'Shields: 0', {
             fontFamily: 'Righteous', fontSize: '32px', color: '#' + this.colorway['UIText']
 
         });
