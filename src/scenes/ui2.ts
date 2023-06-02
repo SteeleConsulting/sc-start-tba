@@ -159,7 +159,7 @@ export default class UI2 extends Phaser.Scene {
     update() {
         const pJustPressed = Phaser.Input.Keyboard.JustDown(this.keys.P);
         const escJustPressed = Phaser.Input.Keyboard.JustDown(this.keys.ESC);
-        if(!(this.scene.isPaused('game_2p_easy') || this.scene.isPaused('game_2p_Hard')) && (this.keys.P.isDown || this.keys.ESC.isDown) && !(pJustPressed || escJustPressed)){
+        if(!(this.scene.isPaused('2p_easy') || this.scene.isPaused('game_2p_Hard')) && (this.keys.P.isDown || this.keys.ESC.isDown) && !(pJustPressed || escJustPressed)){
             this.pauseGame()
         } 
     }
@@ -202,8 +202,16 @@ export default class UI2 extends Phaser.Scene {
     
         hidePauseMenu(pauseMenu) {
             console.log('hide');
-            pauseMenu.destroy(true)
-            this.scene.run('players2')
+            pauseMenu.destroy(true)       
+            if(this.scene.isActive('1p_easy')){
+                this.scene.run('1p_easy')
+            } else if(this.scene.isActive('1p_hard')){
+                this.scene.run('1p_hard')
+            } else if(this.scene.isActive('2p_easy')){
+                this.scene.run('2p_easy')
+            } else if(this.scene.isActive('2p_hard')){
+                this.scene.run('2p_hard')
+            }
         }
     
         returnStart(pauseMenu){
