@@ -78,6 +78,8 @@ export default class Players2 extends Phaser.Scene {
                     this.cameras.main.scrollY = y-800;   // set camera to spaceship Y coordinates
                     this.spaceship = this.matter.add.sprite(x + 700, y, 'space')
                         .play('spaceship-idle');
+                    // this.spaceship.setCollisionGroup(1); 
+                    // this.spaceship.setCollidesWith(0); 
                     /*
                     this.spaceship.setCollisionGroup(1); 
                     this.spaceship.setCollidesWith(3); 
@@ -95,17 +97,23 @@ export default class Players2 extends Phaser.Scene {
                             console.log('collided with speedup');
                             this.powerupSound.play();
                         }
+                        // Where powerup is collided with spaceship
                         if (spriteB?.getData('type') == 'speedup') {
                             console.log('collided with speedup');
+                            spriteB.destroy(); 
                             this.powerupSound.play();
                         }
+                        if( spriteB?.getData('type') == 'powerup') {
+                            console.log('collided with powerup');
+                            spriteB.destroy(); 
+                            this.powerupSound.play();
+                        } 
                         if (spriteA?.getData('type') == 'enemy1' || spriteA?.getData('type') == 'enemy2' || spriteA?.getData('type') == 'enemy3') {
                             events.emit('collide-enemy');
                             console.log('collided with enemy');
                             this.explosionSound.play();
                             
                         }
-                        
                         
                         if (spriteB?.getData('type') == 'enemy1' || spriteB?.getData('type') == 'enemy2' || spriteB?.getData('type') == 'enemy3') {
                             events.emit('collide-enemy');
@@ -119,6 +127,8 @@ export default class Players2 extends Phaser.Scene {
 
                     this.spaceship2 = this.matter.add.sprite(x, y, 'space')
                         .play('spaceship-idle2');
+                    // this.spaceship2.setCollisionGroup(2); 
+                    // this.spaceship2.setCollidesWith(0)
                     /*
                     this.spaceship2.setCollisionGroup(2); 
                     this.spaceship2.setCollidesWith(3)
@@ -138,8 +148,14 @@ export default class Players2 extends Phaser.Scene {
                         }
                         if (spriteB?.getData('type') == 'speedup') {
                             console.log('collided with speedup');
+                            spriteB.destroy(); 
                             this.powerupSound.play();
                         }
+                        if( spriteB?.getData('type') == 'powerup') {
+                            console.log('collided with powerup');
+                            spriteB.destroy(); 
+                            this.powerupSound.play();
+                        } 
                         if (spriteA?.getData('type') == 'enemy1' || spriteA?.getData('type') == 'enemy2' || spriteA?.getData('type') == 'enemy3') {
                             events.emit('collide-enemy');
                             console.log('collided with enemy');
@@ -165,6 +181,27 @@ export default class Players2 extends Phaser.Scene {
                     speedup.setBounce(1);
                     speedup.setData('type', 'speedup');
                     break;
+
+                case 'powerup' : 
+                    var result = Phaser.Math.Between(1,3);
+                        
+                    switch(result){
+                    case 3:
+                        const shield = this.matter.add.sprite(x, y, 'space', "Power-ups/shield_silver.png", {
+                            isStatic: true,
+                            isSensor: true
+                        });
+                        shield.setData('type', 'powerup');
+                    break;
+                    case 1:
+                        const health = this.matter.add.sprite(x, y, 'space', 'Power-ups/pill_red.png', {
+                            isStatic: true,
+                            isSensor: true
+                        });
+                        health.setData('type', 'powerup');
+                    break; 
+                } 
+                break;  
                 /*
                 case 'enemy':
                     const enemy = this.matter.add.sprite(x,y,'space','Enemies/enemyRed2.png',{

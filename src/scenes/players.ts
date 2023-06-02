@@ -7,23 +7,19 @@ export default class Players extends Phaser.Scene {
         super('players');
     }
     
-    bg;
-    p1Button;
-    p2Button;
-    backButton;
 
     colorway = {
-        'bg' : 0x264653,
-        'p1Button1' : 0xF4A261,
-        'p1Button2' : 0xE76F51,
-        'p2Button1' : 0xF4A261,
-        'p2Button2' : 0xE76F51,        
-        'back1' : 0xF4A261,
-        'back2' : 0xE76F51,
-        'playersTitle' : 'E9C46A',
-        'p1Text' : '264653',
-        'p2Text' : '264653',
-        'backText' : '264653'
+        'bg' : 0x1D3557,
+        'p1Button1' : 0x457B9D,
+        'p1Button2' : 0xE63946,
+        'p2Button1' : 0x457B9D,
+        'p2Button2' : 0xE63946,        
+        'back1' : 0x457B9D,
+        'back2' : 0xE63946,
+        'playersTitle' : 'F1FAEE',
+        'p1Text' : 'F1FAEE',
+        'p2Text' : 'F1FAEE',
+        'backText' : 'F1FAEE'
     }
 
 
@@ -32,13 +28,13 @@ export default class Players extends Phaser.Scene {
 
     preload(){
 
-        const fonts = new WebFontFile(this.load, 'Quicksand')
+        const fonts = new WebFontFile(this.load, 'Righteous')
 		this.load.addFile(fonts)
 
         const { width, height } = this.scale;
 
         var bgRect = new Phaser.Geom.Rectangle(0, 0, width, height)
-        var bg = this.add.graphics({fillStyle: {color : 0x14213D } })
+        var bg = this.add.graphics({fillStyle: {color : this.colorway['bg'] } })
         bg.fillRoundedRect(bgRect.x, bgRect.y, bgRect.width, bgRect.height, 0);
 
     }
@@ -48,7 +44,7 @@ export default class Players extends Phaser.Scene {
 
         // page title
         this.add.text(width / 6, height / 5, 'SELECT NUMBER OF PLAYERS', {
-            fontFamily : 'Quicksand', fontSize: '80px', color : '#' + this.colorway['playersTitle']
+            fontFamily : 'Righteous', fontSize: '80px', color : '#' + this.colorway['playersTitle']
         })
         
         // 1 player game button
@@ -56,7 +52,7 @@ export default class Players extends Phaser.Scene {
         this.makeButton(width / 3 + 10, height / 4 + 115, width / 3, height / 8, this.colorway['p1Button2'], 15)
 
         this.add.text(width / 3 + 100, height / 4 + 135, '1 PLAYER', {
-            fontFamily : 'Quicksand', fontSize: '80px', color : '#' + this.colorway['p1Text']
+            fontFamily : 'Righteous', fontSize: '80px', color : '#' + this.colorway['p1Text']
         }).setInteractive().on('pointerdown', () => (this.p1Game()))
 
         // 2 player game button
@@ -64,16 +60,18 @@ export default class Players extends Phaser.Scene {
         this.makeButton(width / 3 + 10, height  / 2 + 135, width / 3, height / 8, this.colorway['p2Button2'], 15)
 
         var p2Text = this.add.text(width / 3 + 65, height / 2 + 155, '2 PLAYERS', {
-            fontFamily : 'Quicksand', fontSize: '80px', color : this.colorway['p2Text']
+            fontFamily : 'Righteous', fontSize: '80px', color : '#' + this.colorway['p2Text']
         }).setInteractive().on('pointerdown', () => (this.p2Game()))
         
         // back button
         this.makeButton(width * 5 / 6, height * 6 / 7, width / 8, height / 14, this.colorway['back1'], 15)
+        .setInteractive().on('pointerdown', () => (this.goBack()))
         this.makeButton(width * 5 / 6 + 10, height * 6 / 7 + 5, width / 8, height / 14, this.colorway['back2'], 15)
+        .setInteractive().on('pointerdown', () => (this.goBack()))
 
         this.add.text(width * 5 / 6 + 45, height * 6 / 7 + 15, 'BACK', {
-            fontFamily : 'Quicksand', fontSize : '40px', color : '#' + this.colorway['backText']
-        }).setInteractive().on('pointerdown', () => (this.backButton()))
+            fontFamily : 'Righteous', fontSize : '40px', color : '#' + this.colorway['backText']
+        }).setInteractive().on('pointerdown', () => (this.goBack()))
     }
 
     update() { }
@@ -97,6 +95,6 @@ export default class Players extends Phaser.Scene {
     } // needs way to indicate 2 players
 
     goBack() {
-        this.scene.start('StartScreen')
+        this.scene.start('start')
     }
 }
